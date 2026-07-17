@@ -78,7 +78,9 @@ export default function Home() {
   return (
     <div className="min-h-full bg-[rgb(var(--color-bg))]">
       {/* Full-width hero header banner */}
-      <div className="w-full bg-[#1267d6] pt-[env(safe-area-inset-top,0px)] shadow-md">
+      <div className="w-full page-hero pt-[env(safe-area-inset-top,0px)] shadow-lg relative overflow-hidden">
+        <div className="absolute -top-8 left-1/4 w-32 h-32 rounded-full bg-white/10 blur-2xl pointer-events-none animate-glow" />
+        <div className="absolute -bottom-10 right-1/4 w-40 h-40 rounded-full bg-sky-300/10 blur-3xl pointer-events-none" />
         <div className="relative w-full overflow-hidden" style={{ paddingTop: '50%' }}>
           <img
             src={HEADER_BANNER}
@@ -90,7 +92,7 @@ export default function Home() {
             style={{ objectPosition: 'center top' }}
           />
           {/* غطاء سفلي لإخفاء كلمة v2 ودمج البانر مع الخلفية */}
-          <div className="absolute bottom-0 left-0 right-0 h-[14%] bg-gradient-to-t from-[#1267d6] to-transparent" />
+          <div className="absolute bottom-0 left-0 right-0 h-[14%] bg-gradient-to-t from-blue-700 to-transparent" />
         </div>
       </div>
 
@@ -115,7 +117,7 @@ export default function Home() {
 
       <div className="px-4 py-4 space-y-3">
         {/* Network status card */}
-        <div className="bg-white rounded-3xl p-4 shadow-sm border border-blue-100">
+        <div className="sn-card rounded-3xl p-4">
           <div className="flex items-center gap-3">
             <div className={`w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0 ${checking ? 'bg-blue-50' : online ? 'bg-green-50' : 'bg-red-50'}`}>
               {checking
@@ -182,7 +184,7 @@ export default function Home() {
         {lastCard && (
           <button
             onClick={() => loginToHotspot({ username: lastCard.code, recordCode: true })}
-            className="w-full bg-white rounded-2xl p-4 shadow-sm border border-indigo-100 flex items-center gap-3 active:scale-[0.98] transition-transform"
+            className="w-full sn-card rounded-2xl p-4 flex items-center gap-3 active:scale-[0.98] transition-transform"
           >
             <div className="w-11 h-11 rounded-xl bg-indigo-50 flex items-center justify-center flex-shrink-0">
               <RotateCw size={20} className="text-indigo-500" />

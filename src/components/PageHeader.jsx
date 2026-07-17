@@ -29,8 +29,9 @@ export default function PageHeader({
       className={`page-hero page-hero--${accent} relative pt-[calc(env(safe-area-inset-top,0px)+0.7rem)] pb-6 px-4 shadow-lg overflow-hidden`}
     >
       {/* زخرفة خلفية ناعمة */}
-      <div className="absolute -top-12 -left-10 w-40 h-40 rounded-full bg-white/10 blur-2xl pointer-events-none" />
-      <div className="absolute -bottom-14 right-0 w-44 h-44 rounded-full bg-white/10 blur-2xl pointer-events-none" />
+      <div className="absolute -top-12 -left-10 w-40 h-40 rounded-full bg-white/15 blur-2xl pointer-events-none animate-glow" />
+      <div className="absolute -bottom-14 right-0 w-44 h-44 rounded-full bg-white/10 blur-2xl pointer-events-none animate-glow" style={{ animationDelay: '1s' }} />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 rounded-full bg-sky-300/10 blur-3xl pointer-events-none" />
 
       <div className="relative">
         {/* صف علوي: رجوع + إجراء */}

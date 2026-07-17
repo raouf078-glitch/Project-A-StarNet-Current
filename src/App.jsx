@@ -1,5 +1,5 @@
 import { HashRouter, Routes, Route, Link, useLocation } from 'react-router-dom'
-import { Home, MapPin, Wrench, Store, Settings } from 'lucide-react'
+import { Hop as Home, MapPin, Wrench, Store, Settings } from 'lucide-react'
 import { useRef, useEffect, useState } from 'react'
 import HomePage from './pages/Home'
 import OffersPage from './pages/Offers'
@@ -17,6 +17,26 @@ import AssistantPage from './pages/Assistant'
 import AdminAssistantPage from './pages/AdminAssistant'
 import Splash from './components/Splash'
 import './theme'
+
+function Particles() {
+  const items = Array.from({ length: 12 }, (_, i) => {
+    const size = 3 + (i % 4) * 2
+    const left = (i * 37) % 100
+    const dur = 12 + (i % 5) * 3
+    const delay = (i * 1.7) % 10
+    return { size, left, dur, delay }
+  })
+  return (
+    <div className="sn-particles" aria-hidden="true">
+      {items.map((p, i) => (
+        <span key={i} style={{
+          width: p.size, height: p.size, left: `${p.left}%`,
+          animationDuration: `${p.dur}s`, animationDelay: `${p.delay}s`,
+        }} />
+      ))}
+    </div>
+  )
+}
 
 function ScrollReset({ scrollRef }) {
   const { pathname } = useLocation()
@@ -38,22 +58,23 @@ function TabBar() {
     { path: '/settings', icon: Settings, label: 'الإعدادات' },
   ]
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-blue-100 z-20 shadow-xl pb-[env(safe-area-inset-bottom,0px)]">
-      <div className="flex items-stretch">
+    <nav className="fixed bottom-0 left-0 right-0 sn-nav z-20 pb-[env(safe-area-inset-bottom,0px)]">
+      <div className="flex items-stretch px-2 pt-1.5">
         {tabs.map(tab => {
           const active = tab.path === pathname
           return (
             <Link
               key={tab.path}
               to={tab.path}
-              className={`flex-1 flex flex-col items-center pt-2 pb-1.5 gap-0.5 transition-all ${active ? 'text-blue-600' : 'text-gray-400'}`}
+              className={`flex-1 flex flex-col items-center pt-2 pb-1.5 gap-0.5 transition-all duration-300 ${active ? 'text-blue-600' : 'text-gray-400'}`}
             >
-              <div className={`p-1 rounded-xl transition-all ${active ? 'bg-blue-50' : ''}`}>
+              <div className={`p-1 rounded-xl transition-all duration-300 ${active ? 'bg-blue-50 shadow-sm scale-105' : ''}`}>
                 <tab.icon size={20} strokeWidth={active ? 2.5 : 1.5} />
               </div>
-              <span className={`text-[10px] font-semibold leading-none ${active ? 'text-blue-600' : 'text-gray-400'}`}>
+              <span className={`text-[10px] font-semibold leading-none transition-colors duration-300 ${active ? 'text-blue-600' : 'text-gray-400'}`}>
                 {tab.label}
               </span>
+              {active && <span className="absolute bottom-1 w-1 h-1 rounded-full bg-blue-500" />}
             </Link>
           )
         })}
@@ -70,8 +91,9 @@ export default function App() {
 
   return (
     <HashRouter>
-      <div className="h-full flex flex-col" dir="rtl">
-        <main ref={scrollRef} className="flex-1 min-h-0 overflow-y-auto pb-[calc(4.5rem+env(safe-area-inset-bottom,0px))]">
+      <div className="h-full flex flex-col relative" dir="rtl">
+        <Particles />
+        <main ref={scrollRef} className="flex-1 min-h-0 overflow-y-auto pb-[calc(4.5rem+env(safe-area-inset-bottom,0px))] relative z-10">
           <ScrollReset scrollRef={scrollRef} />
           <Routes>
             <Route path="/" element={<HomePage />} />

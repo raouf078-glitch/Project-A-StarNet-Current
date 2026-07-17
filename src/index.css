@@ -19,14 +19,61 @@ html, body, #root {
   font-family: 'Cairo', sans-serif;
 }
 
-/* تثبيت نظام الألوان لمنع التعتيم التلقائي من نظام الهاتف (WebView force-dark) */
 html { color-scheme: light; }
 html.dark { color-scheme: dark; }
 
 html {
-  transition: background-color 0.25s ease;
+  transition: background-color 0.3s ease;
 }
 
+/* ===================== ATMOSPHERIC BACKGROUND ===================== */
+/* Light mode: soft sky atmosphere with layered radial gradients */
+body {
+  background-color: rgb(235 243 255);
+  background-image:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(56, 130, 246, 0.18), transparent 60%),
+    radial-gradient(ellipse 60% 40% at 90% 20%, rgba(14, 165, 233, 0.10), transparent 50%),
+    radial-gradient(ellipse 50% 35% at 10% 80%, rgba(59, 130, 246, 0.08), transparent 50%),
+    linear-gradient(180deg, rgb(238 246 255) 0%, rgb(229 240 254) 100%);
+  background-attachment: fixed;
+}
+
+html.dark body {
+  background-color: rgb(8 15 35);
+  background-image:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(30, 64, 175, 0.28), transparent 60%),
+    radial-gradient(ellipse 60% 40% at 90% 20%, rgba(6, 182, 212, 0.12), transparent 50%),
+    radial-gradient(ellipse 50% 35% at 10% 80%, rgba(29, 78, 216, 0.10), transparent 50%),
+    linear-gradient(180deg, rgb(8 15 35) 0%, rgb(12 22 48) 100%);
+}
+
+/* ===================== FLOATING PARTICLES ===================== */
+@keyframes floatUp {
+  0% { transform: translateY(100vh) translateX(0); opacity: 0; }
+  10% { opacity: 0.5; }
+  90% { opacity: 0.5; }
+  100% { transform: translateY(-10vh) translateX(20px); opacity: 0; }
+}
+
+.sn-particles {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+.sn-particles span {
+  position: absolute;
+  bottom: -10px;
+  border-radius: 50%;
+  background: rgba(56, 130, 246, 0.3);
+  animation: floatUp linear infinite;
+}
+html.dark .sn-particles span {
+  background: rgba(56, 189, 248, 0.25);
+}
+
+/* ===================== ANIMATIONS ===================== */
 @keyframes pulse-ring {
   0% { transform: scale(1); opacity: 0.6; }
   100% { transform: scale(1.5); opacity: 0; }
@@ -39,13 +86,20 @@ html {
   from { opacity: 0; transform: translateY(6px); }
   to { opacity: 1; transform: translateY(0); }
 }
+.animate-fadeIn { animation: fadeIn 0.4s ease-out; }
 
 @keyframes slideUp {
   from { opacity: 0; transform: translateY(24px); }
   to { opacity: 1; transform: translateY(0); }
 }
+.animate-slideUp { animation: slideUp 0.5s ease-out; }
 
-/* شريط الإعلانات المتحرك */
+@keyframes glowPulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.7; }
+}
+.animate-glow { animation: glowPulse 3s ease-in-out infinite; }
+
 @keyframes marquee {
   0% { transform: translateX(0); }
   100% { transform: translateX(50%); }
@@ -54,32 +108,46 @@ html {
   animation: marquee 15s linear infinite;
 }
 
-/* ===================== الوضع الليلي ===================== */
-html.dark {
-  --color-bg: 15 23 42;            /* slate-900 — خلفية الصفحة */
+/* ===================== GLASS CARDS ===================== */
+.sn-card {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 4px 24px rgba(37, 99, 235, 0.06), 0 1px 3px rgba(37, 99, 235, 0.04);
+}
+html.dark .sn-card {
+  background: rgba(30, 41, 59, 0.6);
+  border: 1px solid rgba(56, 189, 248, 0.12);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3), 0 0 1px rgba(56, 189, 248, 0.1);
 }
 
-/* الأسطح والبطاقات */
-html.dark .bg-white { background-color: rgb(30 41 59) !important; }       /* slate-800 */
-html.dark .bg-gray-50 { background-color: rgb(51 65 85) !important; }     /* slate-700 */
-html.dark .bg-gray-100 { background-color: rgb(51 65 85) !important; }
-html.dark .bg-gray-200 { background-color: rgb(71 85 105) !important; }   /* slate-600 */
+/* ===================== DARK MODE ===================== */
+html.dark {
+  --color-bg: 8 15 35;
+}
 
-/* النصوص */
+/* Surfaces & cards */
+html.dark .bg-white { background-color: rgb(30 41 59) !important; }
+html.dark .bg-gray-50 { background-color: rgb(51 65 85) !important; }
+html.dark .bg-gray-100 { background-color: rgb(51 65 85) !important; }
+html.dark .bg-gray-200 { background-color: rgb(71 85 105) !important; }
+
+/* Text */
 html.dark .text-gray-800 { color: rgb(241 245 249) !important; }
 html.dark .text-gray-700 { color: rgb(226 232 240) !important; }
 html.dark .text-gray-600 { color: rgb(203 213 225) !important; }
 html.dark .text-gray-500 { color: rgb(148 163 184) !important; }
 html.dark .text-gray-400 { color: rgb(148 163 184) !important; }
 
-/* الحدود */
+/* Borders */
 html.dark .border-gray-50,
 html.dark .border-gray-100,
 html.dark .border-gray-200,
 html.dark .border-blue-100,
-html.dark .border-indigo-100 { border-color: rgb(51 65 85) !important; }
+html.dark .border-indigo-100 { border-color: rgba(56, 189, 248, 0.15) !important; }
 
-/* خلفيات الأيقونات الملوّنة الفاتحة → نسخة داكنة شفافة */
+/* Icon backgrounds → dark transparent */
 html.dark .bg-green-50   { background-color: rgba(16,185,129,0.16) !important; }
 html.dark .bg-emerald-50 { background-color: rgba(16,185,129,0.16) !important; }
 html.dark .bg-emerald-100{ background-color: rgba(16,185,129,0.22) !important; }
@@ -89,42 +157,15 @@ html.dark .bg-sky-100    { background-color: rgba(14,165,233,0.22) !important; }
 html.dark .bg-blue-50    { background-color: rgba(37,99,235,0.18) !important; }
 html.dark .bg-blue-100   { background-color: rgba(37,99,235,0.24) !important; }
 html.dark .bg-indigo-50  { background-color: rgba(99,102,241,0.16) !important; }
-html.dark .bg-purple-50  { background-color: rgba(168,85,247,0.16) !important; }
-html.dark .bg-orange-50  { background-color: rgba(249,115,22,0.16) !important; }
 html.dark .bg-red-50     { background-color: rgba(239,68,68,0.16) !important; }
 html.dark .bg-cyan-50    { background-color: rgba(6,182,212,0.16) !important; }
 html.dark .bg-amber-50   { background-color: rgba(245,158,11,0.14) !important; }
 html.dark .bg-amber-100  { background-color: rgba(245,158,11,0.22) !important; }
 html.dark .bg-yellow-50  { background-color: rgba(234,179,8,0.14) !important; }
+html.dark .bg-teal-50    { background-color: rgba(20,184,166,0.16) !important; }
 html.dark .border-amber-300 { border-color: rgba(245,158,11,0.45) !important; }
 
-/* ===================== ترويسة موحّدة للصفحات الفرعية ===================== */
-/* الوضع النهاري */
-.page-hero,
-.page-hero--blue {
-  background-image: linear-gradient(to left, rgb(29 78 216), rgb(37 99 235), rgb(56 130 246));
-}
-.page-hero--emerald {
-  background-image: linear-gradient(to left, rgb(5 150 105), rgb(16 185 129), rgb(20 184 166));
-}
-/* الوضع الليلي — تدرّجات أهدأ ومريحة للعين */
-html.dark .page-hero,
-html.dark .page-hero--blue {
-  background-image: linear-gradient(to left, rgb(23 37 84), rgb(30 58 138), rgb(30 64 175));
-}
-html.dark .page-hero--emerald {
-  background-image: linear-gradient(to left, rgb(6 78 59), rgb(6 95 70), rgb(17 94 89));
-}
-
-/* بطاقة دافئة موحّدة (ملخص التقييم) — تهدأ في الليل */
-.warm-card {
-  background-image: linear-gradient(to left, rgb(245 158 11), rgb(251 146 60));
-}
-html.dark .warm-card {
-  background-image: linear-gradient(to left, rgb(146 64 14), rgb(154 52 18));
-}
-
-/* درجات أهدأ للألوان الدافئة (برتقالي/أصفر/كهرماني) في الوضع الليلي — راحة للعين */
+/* Calmer warm colors in dark mode */
 html.dark .text-amber-400,
 html.dark .text-amber-500,
 html.dark .text-amber-600,
@@ -137,18 +178,66 @@ html.dark .text-yellow-500,
 html.dark .text-yellow-600,
 html.dark .text-yellow-700 { color: rgb(208 182 96) !important; }
 
-/* ===== صفحة نقاط البيع — هوية زرقاء موحّدة مع باقي التطبيق ===== */
-/* الوضع النهاري: نفس التدرّج الأزرق المستخدم في باقي الصفحات */
+/* ===================== PAGE HERO ===================== */
+.page-hero,
+.page-hero--blue {
+  background-image:
+    radial-gradient(ellipse 60% 80% at 80% 0%, rgba(255,255,255,0.18), transparent 60%),
+    linear-gradient(to left, rgb(29 78 216), rgb(37 99 235), rgb(56 130 246));
+}
+.page-hero--emerald {
+  background-image:
+    radial-gradient(ellipse 60% 80% at 80% 0%, rgba(255,255,255,0.18), transparent 60%),
+    linear-gradient(to left, rgb(5 150 105), rgb(16 185 129), rgb(20 184 166));
+}
+html.dark .page-hero,
+html.dark .page-hero--blue {
+  background-image:
+    radial-gradient(ellipse 60% 80% at 80% 0%, rgba(56,189,248,0.20), transparent 60%),
+    linear-gradient(to left, rgb(8 20 60), rgb(15 30 80), rgb(20 50 120));
+}
+html.dark .page-hero--emerald {
+  background-image:
+    radial-gradient(ellipse 60% 80% at 80% 0%, rgba(20,184,166,0.18), transparent 60%),
+    linear-gradient(to left, rgb(6 40 35), rgb(6 60 50), rgb(10 80 70));
+}
+
+/* Warm card */
+.warm-card {
+  background-image: linear-gradient(to left, rgb(245 158 11), rgb(251 146 60));
+}
+html.dark .warm-card {
+  background-image: linear-gradient(to left, rgb(120 60 12), rgb(130 55 18));
+}
+
+/* ===================== POS ===================== */
 .pos-hero {
-  background-image: linear-gradient(to left, rgb(29 78 216), rgb(37 99 235), rgb(56 130 246));
+  background-image:
+    radial-gradient(ellipse 60% 80% at 80% 0%, rgba(255,255,255,0.18), transparent 60%),
+    linear-gradient(to left, rgb(29 78 216), rgb(37 99 235), rgb(56 130 246));
 }
 .pos-cta {
   background-image: linear-gradient(to bottom right, rgb(29 78 216), rgb(37 99 235));
 }
-/* الوضع الليلي: تعتيم متناسق مع باقي الصفحات */
 html.dark .pos-hero {
-  background-image: linear-gradient(to left, rgb(23 37 84), rgb(30 58 138), rgb(30 64 175));
+  background-image:
+    radial-gradient(ellipse 60% 80% at 80% 0%, rgba(56,189,248,0.20), transparent 60%),
+    linear-gradient(to left, rgb(8 20 60), rgb(15 30 80), rgb(20 50 120));
 }
 html.dark .pos-cta {
-  background-image: linear-gradient(to bottom right, rgb(23 37 84), rgb(30 58 138));
+  background-image: linear-gradient(to bottom right, rgb(8 20 60), rgb(15 30 80));
+}
+
+/* ===================== FLOATING BOTTOM NAV ===================== */
+.sn-nav {
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid rgba(255, 255, 255, 0.7);
+  box-shadow: 0 -4px 24px rgba(37, 99, 235, 0.08), 0 -1px 3px rgba(37, 99, 235, 0.04);
+}
+html.dark .sn-nav {
+  background: rgba(15, 23, 42, 0.85);
+  border-top: 1px solid rgba(56, 189, 248, 0.15);
+  box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.4), 0 -1px 1px rgba(56, 189, 248, 0.08);
 }
