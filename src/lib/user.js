@@ -1,22 +1,22 @@
-/**
- * Whacka client SDK — user (stub)
- *
- * The implementation runs on the Whacka platform and is provided to your app at
- * runtime; it is intentionally NOT part of this export. This stub only keeps
- * your imports resolving and documents which Whacka APIs your code uses. Your
- * own code (components, pages, hooks) is the real, complete export. See README.
- */
+const LS_KEY = 'whacka_mock_anon_id'
 
-const __wk = (path) =>
-  new Proxy(function () {}, {
-    get: (_t, prop) =>
-      typeof prop === 'symbol' || prop === 'then' ? undefined : __wk(path + '.' + prop),
-    apply: () => {
-      throw new Error(
-        '`' + path + '` runs on the Whacka platform and is not available in exported code.'
-      );
-    },
-  });
+function getOrCreateAnonId() {
+  try {
+    let id = localStorage.getItem(LS_KEY)
+    if (!id) {
+      id = 'anon_' + Math.random().toString(36).slice(2) + Date.now().toString(36)
+      localStorage.setItem(LS_KEY, id)
+    }
+    return id
+  } catch {
+    return 'anon_preview'
+  }
+}
 
-export const getAppUserId = __wk('getAppUserId');
-export const getAnonymousId = __wk('getAnonymousId');
+export function getAppUserId() {
+  return null
+}
+
+export function getAnonymousId() {
+  return getOrCreateAnonId()
+}

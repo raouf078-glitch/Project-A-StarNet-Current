@@ -1,22 +1,40 @@
-/**
- * Whacka client SDK — useLive (stub)
- *
- * The implementation runs on the Whacka platform and is provided to your app at
- * runtime; it is intentionally NOT part of this export. This stub only keeps
- * your imports resolving and documents which Whacka APIs your code uses. Your
- * own code (components, pages, hooks) is the real, complete export. See README.
- */
+import { useState, useEffect, useCallback } from 'react'
 
-const __wk = (path) =>
-  new Proxy(function () {}, {
-    get: (_t, prop) =>
-      typeof prop === 'symbol' || prop === 'then' ? undefined : __wk(path + '.' + prop),
-    apply: () => {
-      throw new Error(
-        '`' + path + '` runs on the Whacka platform and is not available in exported code.'
-      );
-    },
-  });
+const LOCAL_STORE = typeof window !== 'undefined' ? window : null
+const LS_PREFIX = 'whacka_mock_'
 
-export const useLiveShared = __wk('useLiveShared');
-export const useLive = __wk('useLive');
+function readLocal(coll) {
+  try {
+    const raw = LOCAL_STORE?.localStorage?.getItem(LS_PREFIX + coll)
+    return raw ? JSON.parse(raw) : []
+  } catch {
+    return []
+  }
+}
+
+function writeLocal(coll, rows) {
+  try {
+    LOCAL_STORE?.localStorage?.setItem(LS_PREFIX + coll, JSON.stringify(rows))
+  } catch {}
+}
+
+export function useLiveShared(coll, opts = {}) {
+  const [data, setData] = useState(() => readLocal(coll))
+  const [loading, setLoading] = useState(false)
+
+  const refresh = useCallback(() => {
+    setData(readLocal(coll))
+  }, [coll])
+
+  useEffect(() => {
+    refresh()
+  }, [refresh])
+
+  return { data, loading, refresh }
+}
+
+export function useLive(coll, opts = {}) {
+  return useLiveShared(coll, opts)
+}
+
+export const _mockStore = { readLocal, writeLocal }

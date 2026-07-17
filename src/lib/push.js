@@ -1,21 +1,21 @@
-/**
- * Whacka client SDK — push (stub)
- *
- * The implementation runs on the Whacka platform and is provided to your app at
- * runtime; it is intentionally NOT part of this export. This stub only keeps
- * your imports resolving and documents which Whacka APIs your code uses. Your
- * own code (components, pages, hooks) is the real, complete export. See README.
- */
+export const push = {
+  async requestPermission() {
+    return 'denied'
+  },
 
-const __wk = (path) =>
-  new Proxy(function () {}, {
-    get: (_t, prop) =>
-      typeof prop === 'symbol' || prop === 'then' ? undefined : __wk(path + '.' + prop),
-    apply: () => {
-      throw new Error(
-        '`' + path + '` runs on the Whacka platform and is not available in exported code.'
-      );
-    },
-  });
+  async subscribe() {
+    return null
+  },
 
-export const push = __wk('push');
+  async schedule() {
+    return null
+  },
+
+  async cancelSchedule() {
+    return true
+  },
+
+  async diagnose() {
+    return { supported: false, permission: 'denied', subscribed: false }
+  },
+}
