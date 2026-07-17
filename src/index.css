@@ -1,0 +1,154 @@
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+  --color-bg: 235 243 255;
+  --color-primary: 37 99 235;
+  --color-secondary: 16 185 129;
+  --sat: env(safe-area-inset-top, 0px);
+  --sab: env(safe-area-inset-bottom, 0px);
+  --sal: env(safe-area-inset-left, 0px);
+  --sar: env(safe-area-inset-right, 0px);
+}
+
+html, body, #root {
+  font-family: 'Cairo', sans-serif;
+}
+
+/* تثبيت نظام الألوان لمنع التعتيم التلقائي من نظام الهاتف (WebView force-dark) */
+html { color-scheme: light; }
+html.dark { color-scheme: dark; }
+
+html {
+  transition: background-color 0.25s ease;
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(1); opacity: 0.6; }
+  100% { transform: scale(1.5); opacity: 0; }
+}
+.pulse-ring {
+  animation: pulse-ring 1.5s ease-out infinite;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* شريط الإعلانات المتحرك */
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(50%); }
+}
+.animate-marquee {
+  animation: marquee 15s linear infinite;
+}
+
+/* ===================== الوضع الليلي ===================== */
+html.dark {
+  --color-bg: 15 23 42;            /* slate-900 — خلفية الصفحة */
+}
+
+/* الأسطح والبطاقات */
+html.dark .bg-white { background-color: rgb(30 41 59) !important; }       /* slate-800 */
+html.dark .bg-gray-50 { background-color: rgb(51 65 85) !important; }     /* slate-700 */
+html.dark .bg-gray-100 { background-color: rgb(51 65 85) !important; }
+html.dark .bg-gray-200 { background-color: rgb(71 85 105) !important; }   /* slate-600 */
+
+/* النصوص */
+html.dark .text-gray-800 { color: rgb(241 245 249) !important; }
+html.dark .text-gray-700 { color: rgb(226 232 240) !important; }
+html.dark .text-gray-600 { color: rgb(203 213 225) !important; }
+html.dark .text-gray-500 { color: rgb(148 163 184) !important; }
+html.dark .text-gray-400 { color: rgb(148 163 184) !important; }
+
+/* الحدود */
+html.dark .border-gray-50,
+html.dark .border-gray-100,
+html.dark .border-gray-200,
+html.dark .border-blue-100,
+html.dark .border-indigo-100 { border-color: rgb(51 65 85) !important; }
+
+/* خلفيات الأيقونات الملوّنة الفاتحة → نسخة داكنة شفافة */
+html.dark .bg-green-50   { background-color: rgba(16,185,129,0.16) !important; }
+html.dark .bg-emerald-50 { background-color: rgba(16,185,129,0.16) !important; }
+html.dark .bg-emerald-100{ background-color: rgba(16,185,129,0.22) !important; }
+html.dark .bg-green-100  { background-color: rgba(16,185,129,0.22) !important; }
+html.dark .bg-sky-50     { background-color: rgba(14,165,233,0.16) !important; }
+html.dark .bg-sky-100    { background-color: rgba(14,165,233,0.22) !important; }
+html.dark .bg-blue-50    { background-color: rgba(37,99,235,0.18) !important; }
+html.dark .bg-blue-100   { background-color: rgba(37,99,235,0.24) !important; }
+html.dark .bg-indigo-50  { background-color: rgba(99,102,241,0.16) !important; }
+html.dark .bg-purple-50  { background-color: rgba(168,85,247,0.16) !important; }
+html.dark .bg-orange-50  { background-color: rgba(249,115,22,0.16) !important; }
+html.dark .bg-red-50     { background-color: rgba(239,68,68,0.16) !important; }
+html.dark .bg-cyan-50    { background-color: rgba(6,182,212,0.16) !important; }
+html.dark .bg-amber-50   { background-color: rgba(245,158,11,0.14) !important; }
+html.dark .bg-amber-100  { background-color: rgba(245,158,11,0.22) !important; }
+html.dark .bg-yellow-50  { background-color: rgba(234,179,8,0.14) !important; }
+html.dark .border-amber-300 { border-color: rgba(245,158,11,0.45) !important; }
+
+/* ===================== ترويسة موحّدة للصفحات الفرعية ===================== */
+/* الوضع النهاري */
+.page-hero,
+.page-hero--blue {
+  background-image: linear-gradient(to left, rgb(29 78 216), rgb(37 99 235), rgb(56 130 246));
+}
+.page-hero--emerald {
+  background-image: linear-gradient(to left, rgb(5 150 105), rgb(16 185 129), rgb(20 184 166));
+}
+/* الوضع الليلي — تدرّجات أهدأ ومريحة للعين */
+html.dark .page-hero,
+html.dark .page-hero--blue {
+  background-image: linear-gradient(to left, rgb(23 37 84), rgb(30 58 138), rgb(30 64 175));
+}
+html.dark .page-hero--emerald {
+  background-image: linear-gradient(to left, rgb(6 78 59), rgb(6 95 70), rgb(17 94 89));
+}
+
+/* بطاقة دافئة موحّدة (ملخص التقييم) — تهدأ في الليل */
+.warm-card {
+  background-image: linear-gradient(to left, rgb(245 158 11), rgb(251 146 60));
+}
+html.dark .warm-card {
+  background-image: linear-gradient(to left, rgb(146 64 14), rgb(154 52 18));
+}
+
+/* درجات أهدأ للألوان الدافئة (برتقالي/أصفر/كهرماني) في الوضع الليلي — راحة للعين */
+html.dark .text-amber-400,
+html.dark .text-amber-500,
+html.dark .text-amber-600,
+html.dark .text-amber-700 { color: rgb(214 167 80) !important; }
+html.dark .text-orange-400,
+html.dark .text-orange-500,
+html.dark .text-orange-600,
+html.dark .text-orange-700 { color: rgb(216 146 94) !important; }
+html.dark .text-yellow-500,
+html.dark .text-yellow-600,
+html.dark .text-yellow-700 { color: rgb(208 182 96) !important; }
+
+/* ===== صفحة نقاط البيع — هوية زرقاء موحّدة مع باقي التطبيق ===== */
+/* الوضع النهاري: نفس التدرّج الأزرق المستخدم في باقي الصفحات */
+.pos-hero {
+  background-image: linear-gradient(to left, rgb(29 78 216), rgb(37 99 235), rgb(56 130 246));
+}
+.pos-cta {
+  background-image: linear-gradient(to bottom right, rgb(29 78 216), rgb(37 99 235));
+}
+/* الوضع الليلي: تعتيم متناسق مع باقي الصفحات */
+html.dark .pos-hero {
+  background-image: linear-gradient(to left, rgb(23 37 84), rgb(30 58 138), rgb(30 64 175));
+}
+html.dark .pos-cta {
+  background-image: linear-gradient(to bottom right, rgb(23 37 84), rgb(30 58 138));
+}
