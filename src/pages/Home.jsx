@@ -161,53 +161,53 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Login section — original StarNET two-card layout + third OCR card */}
+        {/* Login section */}
         <div>
           <h2 className="text-[1.05rem] font-[900] text-gray-800 dark:text-gray-100 mb-3">تسجيل الدخول للإنترنت</h2>
-          <div className="grid grid-cols-3 gap-2.5">
-            {/* Card 1 — مسح الباركود (teal) */}
-            <button
-              type="button"
-              onClick={() => setShowGuide('barcode')}
-              className="relative rounded-[1.15rem] overflow-hidden flex flex-col items-center justify-end pb-4 pt-5 px-2 min-h-[9rem] active:scale-95 transition-transform shadow-[0_6px_24px_rgba(0,180,160,0.22)] bg-gradient-to-br from-[#2dd4c0] to-[#17a899]"
-            >
-              <div className="absolute inset-0 flex items-center justify-center pb-5">
-                <div className="w-14 h-14 rounded-2xl bg-white/20 flex items-center justify-center">
-                  <QrCode size={30} className="text-white" />
-                </div>
-              </div>
-              <p className="relative text-white font-[800] text-[0.82rem] leading-tight text-center">مسح الباركود</p>
-              <p className="relative text-white/75 text-[0.62rem] text-center leading-tight mt-0.5">امسح كود البطاقة بالكاميرا</p>
-            </button>
-
-            {/* Card 2 — إدخال الكود (blue) */}
+          <div className="grid grid-cols-3 gap-2">
+            {/* 1 — إدخال الكود (blue) — DOM first = visual right in RTL */}
             <button
               type="button"
               onClick={() => setShowCodeInput(true)}
-              className="relative rounded-[1.15rem] overflow-hidden flex flex-col items-center justify-end pb-4 pt-5 px-2 min-h-[9rem] active:scale-95 transition-transform shadow-[0_6px_24px_rgba(0,80,200,0.22)] bg-gradient-to-br from-[#2563d4] to-[#1a3fa6]"
+              className="rounded-[1.1rem] overflow-hidden flex flex-col items-center justify-center gap-2.5 py-5 px-2 min-h-[8.5rem] active:scale-95 transition-transform shadow-[0_6px_22px_rgba(0,80,200,0.28)] bg-gradient-to-br from-[#2b6fd4] to-[#1a3fa6]"
             >
-              <div className="absolute inset-0 flex items-center justify-center pb-5">
-                <div className="w-14 h-14 rounded-2xl bg-white/20 flex items-center justify-center">
-                  <Keyboard size={28} className="text-white" />
-                </div>
+              <div className="w-11 h-11 rounded-[0.7rem] bg-white/20 flex items-center justify-center flex-shrink-0">
+                <Keyboard size={22} className="text-white" />
               </div>
-              <p className="relative text-white font-[800] text-[0.82rem] leading-tight text-center">إدخال الكود</p>
-              <p className="relative text-white/75 text-[0.62rem] text-center leading-tight mt-0.5">اكتب كود البطاقة يدوياً</p>
+              <div className="text-center">
+                <p className="text-white font-[800] text-[0.8rem] leading-snug">إدخال الكود</p>
+                <p className="text-white/70 text-[0.58rem] leading-snug mt-0.5">اكتب كود البطاقة يدوياً</p>
+              </div>
             </button>
 
-            {/* Card 3 — مسح رقم الكرت / OCR (purple) */}
+            {/* 2 — مسح الباركود (teal) */}
+            <button
+              type="button"
+              onClick={() => setShowGuide('barcode')}
+              className="rounded-[1.1rem] overflow-hidden flex flex-col items-center justify-center gap-2.5 py-5 px-2 min-h-[8.5rem] active:scale-95 transition-transform shadow-[0_6px_22px_rgba(0,190,170,0.28)] bg-gradient-to-br from-[#2dd4bf] to-[#0d9488]"
+            >
+              <div className="w-11 h-11 rounded-[0.7rem] bg-white/20 flex items-center justify-center flex-shrink-0">
+                <QrCode size={22} className="text-white" />
+              </div>
+              <div className="text-center">
+                <p className="text-white font-[800] text-[0.8rem] leading-snug">مسح الباركود</p>
+                <p className="text-white/70 text-[0.58rem] leading-snug mt-0.5">امسح كود البطاقة بالكاميرا</p>
+              </div>
+            </button>
+
+            {/* 3 — مسح رقم الكرت — OCR (violet) */}
             <button
               type="button"
               onClick={() => setShowGuide('ocr')}
-              className="relative rounded-[1.15rem] overflow-hidden flex flex-col items-center justify-end pb-4 pt-5 px-2 min-h-[9rem] active:scale-95 transition-transform shadow-[0_6px_24px_rgba(120,60,200,0.22)] bg-gradient-to-br from-[#7c3aed] to-[#5b21b6]"
+              className="rounded-[1.1rem] overflow-hidden flex flex-col items-center justify-center gap-2.5 py-5 px-2 min-h-[8.5rem] active:scale-95 transition-transform shadow-[0_6px_22px_rgba(109,40,217,0.28)] bg-gradient-to-br from-[#7c3aed] to-[#4c1d95]"
             >
-              <div className="absolute inset-0 flex items-center justify-center pb-5">
-                <div className="w-14 h-14 rounded-2xl bg-white/20 flex items-center justify-center">
-                  <Camera size={26} className="text-white" />
-                </div>
+              <div className="w-11 h-11 rounded-[0.7rem] bg-white/20 flex items-center justify-center flex-shrink-0">
+                <Camera size={20} className="text-white" />
               </div>
-              <p className="relative text-white font-[800] text-[0.82rem] leading-tight text-center">مسح رقم الكرت</p>
-              <p className="relative text-white/75 text-[0.62rem] text-center leading-tight mt-0.5">صوّر رقم البطاقة المطبوع</p>
+              <div className="text-center">
+                <p className="text-white font-[800] text-[0.8rem] leading-snug">مسح رقم الكرت</p>
+                <p className="text-white/70 text-[0.58rem] leading-snug mt-0.5">صوّر رقم البطاقة المطبوع</p>
+              </div>
             </button>
           </div>
         </div>
