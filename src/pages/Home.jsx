@@ -15,7 +15,6 @@ import {
 import { getTheme, toggleTheme } from '../theme'
 import HeroSlider from '../components/HeroSlider'
 import AssistantFab from '../components/AssistantFab'
-import ScanSheet from '../components/ScanSheet'
 import CameraGuide from '../components/CameraGuide'
 import { processImageBarcode, processImageOcr } from '../lib/barcode'
 
@@ -26,8 +25,8 @@ export default function Home() {
   const [showContact, setShowContact] = useState(false)
   const [showLogout, setShowLogout] = useState(false)
   const [feature, setFeature] = useState(null)
-  const [showScanSheet, setShowScanSheet] = useState(false)
   const [showGuide, setShowGuide] = useState(null) // null | 'barcode' | 'ocr'
+  const [showCodeInput, setShowCodeInput] = useState(false)
   const [loginCode, setLoginCode] = useState('')
   const [loginBusy, setLoginBusy] = useState(false)
   const loginInputRef = useRef(null)
@@ -162,58 +161,55 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Primary login card — matching StarNET Hotspot layout */}
-        <div className="w-full bg-white dark:bg-[rgba(5,20,38,0.97)] rounded-[var(--sn-radius-lg,20px)] border border-[rgba(0,86,179,0.07)] dark:border-[rgba(0,180,216,0.22)] shadow-[var(--sn-glass-shadow)] p-[1.45rem_1.2rem_1.3rem]">
-          <h2 className="text-center text-[1.05rem] font-[800] text-[#0077d4] dark:text-[#90e0ef] mb-[1.1rem]">أدخل رقم الكرت</h2>
-          {/* Input row: camera | field | history */}
-          <div className="flex items-center gap-[0.45rem] mb-[1.2rem]">
-            {/* Camera button */}
+        {/* Login section — original StarNET two-card layout + third OCR card */}
+        <div>
+          <h2 className="text-[1.05rem] font-[900] text-gray-800 dark:text-gray-100 mb-3">تسجيل الدخول للإنترنت</h2>
+          <div className="grid grid-cols-3 gap-2.5">
+            {/* Card 1 — مسح الباركود (teal) */}
             <button
               type="button"
-              onClick={() => setShowScanSheet(true)}
-              className="flex-shrink-0 flex flex-col items-center justify-center gap-[0.18rem] w-[3.2rem] h-[3.2rem] rounded-[0.8rem] border-[1.5px] border-[rgba(0,119,212,0.22)] dark:border-[rgba(0,180,216,0.28)] bg-white dark:bg-[rgba(0,16,32,0.72)] text-[#3d5a80] dark:text-[#94a8c4] shadow-[0_2px_10px_rgba(0,45,98,0.04)] dark:shadow-[0_0_18px_rgba(0,180,216,0.08)] transition-all active:scale-95"
+              onClick={() => setShowGuide('barcode')}
+              className="relative rounded-[1.15rem] overflow-hidden flex flex-col items-center justify-end pb-4 pt-5 px-2 min-h-[9rem] active:scale-95 transition-transform shadow-[0_6px_24px_rgba(0,180,160,0.22)] bg-gradient-to-br from-[#2dd4c0] to-[#17a899]"
             >
-              <Camera size={18} />
-              <span className="text-[0.54rem] font-bold leading-none">الكاميرا</span>
+              <div className="absolute inset-0 flex items-center justify-center pb-5">
+                <div className="w-14 h-14 rounded-2xl bg-white/20 flex items-center justify-center">
+                  <QrCode size={30} className="text-white" />
+                </div>
+              </div>
+              <p className="relative text-white font-[800] text-[0.82rem] leading-tight text-center">مسح الباركود</p>
+              <p className="relative text-white/75 text-[0.62rem] text-center leading-tight mt-0.5">امسح كود البطاقة بالكاميرا</p>
             </button>
-            {/* Input field */}
-            <div className="flex-1 min-w-0">
-              <input
-                ref={loginInputRef}
-                type="text"
-                autoComplete="off"
-                value={loginCode}
-                onChange={e => setLoginCode(e.target.value)}
-                placeholder="أدخل رقم الكرت هنا"
-                dir="ltr"
-                className="w-full h-[3.2rem] rounded-[0.8rem] border-[1.5px] border-[rgba(0,119,212,0.14)] dark:border-[rgba(0,180,216,0.2)] bg-[#f4f9ff] dark:bg-[rgba(0,16,32,0.5)] px-3 text-center text-[0.95rem] font-bold tracking-widest text-gray-800 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:border-[#0077d4] dark:focus:border-[#48cae4] transition-colors"
-              />
-            </div>
-            {/* History button */}
+
+            {/* Card 2 — إدخال الكود (blue) */}
             <button
               type="button"
-              onClick={() => navigate('/my-cards')}
-              className="flex-shrink-0 flex flex-col items-center justify-center gap-[0.18rem] w-[3.2rem] h-[3.2rem] rounded-[0.8rem] border-[1.5px] border-[rgba(0,119,212,0.22)] dark:border-[rgba(0,180,216,0.28)] bg-white dark:bg-[rgba(0,16,32,0.72)] text-[#3d5a80] dark:text-[#94a8c4] shadow-[0_2px_10px_rgba(0,45,98,0.04)] dark:shadow-[0_0_18px_rgba(0,180,216,0.08)] transition-all active:scale-95"
+              onClick={() => setShowCodeInput(true)}
+              className="relative rounded-[1.15rem] overflow-hidden flex flex-col items-center justify-end pb-4 pt-5 px-2 min-h-[9rem] active:scale-95 transition-transform shadow-[0_6px_24px_rgba(0,80,200,0.22)] bg-gradient-to-br from-[#2563d4] to-[#1a3fa6]"
             >
-              <History size={18} />
-              <span className="text-[0.54rem] font-bold leading-none">السجل</span>
+              <div className="absolute inset-0 flex items-center justify-center pb-5">
+                <div className="w-14 h-14 rounded-2xl bg-white/20 flex items-center justify-center">
+                  <Keyboard size={28} className="text-white" />
+                </div>
+              </div>
+              <p className="relative text-white font-[800] text-[0.82rem] leading-tight text-center">إدخال الكود</p>
+              <p className="relative text-white/75 text-[0.62rem] text-center leading-tight mt-0.5">اكتب كود البطاقة يدوياً</p>
+            </button>
+
+            {/* Card 3 — مسح رقم الكرت / OCR (purple) */}
+            <button
+              type="button"
+              onClick={() => setShowGuide('ocr')}
+              className="relative rounded-[1.15rem] overflow-hidden flex flex-col items-center justify-end pb-4 pt-5 px-2 min-h-[9rem] active:scale-95 transition-transform shadow-[0_6px_24px_rgba(120,60,200,0.22)] bg-gradient-to-br from-[#7c3aed] to-[#5b21b6]"
+            >
+              <div className="absolute inset-0 flex items-center justify-center pb-5">
+                <div className="w-14 h-14 rounded-2xl bg-white/20 flex items-center justify-center">
+                  <Camera size={26} className="text-white" />
+                </div>
+              </div>
+              <p className="relative text-white font-[800] text-[0.82rem] leading-tight text-center">مسح رقم الكرت</p>
+              <p className="relative text-white/75 text-[0.62rem] text-center leading-tight mt-0.5">صوّر رقم البطاقة المطبوع</p>
             </button>
           </div>
-          {/* Submit button */}
-          <button
-            type="button"
-            onClick={() => {
-              const c = extractCardCode(loginCode)
-              if (!c || loginBusy) return
-              setLoginBusy(true)
-              loginToHotspot({ username: c, recordCode: true })
-            }}
-            disabled={loginBusy || !loginCode.trim()}
-            className="relative w-full h-[3.1rem] rounded-[0.85rem] bg-gradient-to-l from-[#0077d4] to-[#00b4d8] text-white font-[800] text-[0.95rem] flex items-center justify-center gap-2 shadow-[0_6px_20px_rgba(0,119,212,0.28)] disabled:opacity-50 active:scale-[0.98] transition-transform overflow-hidden"
-          >
-            <Wifi size={20} />
-            <span>{loginBusy ? 'جاري الاتصال...' : 'دخول الإنترنت'}</span>
-          </button>
         </div>
 
         {/* Last used card — quick reuse */}
@@ -450,18 +446,64 @@ export default function Home() {
       {/* زر مساعد ستار نت العائم */}
       <AssistantFab />
 
-      {/* Scan sheet — matching StarNET Hotspot camera chooser */}
-      <ScanSheet
-        open={showScanSheet}
-        onClose={() => setShowScanSheet(false)}
-        onChooseBarcode={() => setShowGuide('barcode')}
-        onChooseOcr={() => setShowGuide('ocr')}
-      />
+      {/* Manual code input bottom sheet */}
+      {showCodeInput && (
+        <div
+          className="fixed inset-0 bg-black/40 z-40 flex items-end justify-center"
+          style={{ height: 'var(--visual-height, 100dvh)' }}
+          onClick={() => setShowCodeInput(false)}
+        >
+          <div
+            className="w-full max-w-md bg-white dark:bg-[rgb(10,22,40)] rounded-t-3xl p-5 pb-[calc(1.5rem+env(safe-area-inset-bottom,0px))]"
+            onClick={e => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-base font-black text-gray-800 dark:text-gray-100">إدخال رقم الكرت</h2>
+              <button onClick={() => setShowCodeInput(false)} className="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
+                <X size={16} className="text-gray-500" />
+              </button>
+            </div>
+            <input
+              ref={loginInputRef}
+              type="text"
+              autoComplete="off"
+              autoFocus
+              value={loginCode}
+              onChange={e => setLoginCode(e.target.value)}
+              placeholder="أدخل رقم الكرت هنا"
+              dir="ltr"
+              className="w-full h-[3.2rem] rounded-[0.8rem] border-[1.5px] border-[rgba(0,119,212,0.2)] dark:border-[rgba(0,180,216,0.2)] bg-[#f4f9ff] dark:bg-[rgba(0,16,32,0.5)] px-3 text-center text-[0.95rem] font-bold tracking-widest text-gray-800 dark:text-gray-100 placeholder:text-gray-400 focus:outline-none focus:border-[#0077d4] transition-colors mb-3"
+            />
+            <button
+              type="button"
+              onClick={() => {
+                const c = extractCardCode(loginCode)
+                if (!c || loginBusy) return
+                setLoginBusy(true)
+                setShowCodeInput(false)
+                loginToHotspot({ username: c, recordCode: true })
+              }}
+              disabled={loginBusy || !loginCode.trim()}
+              className="w-full h-[3.1rem] rounded-[0.85rem] bg-gradient-to-l from-[#0077d4] to-[#00b4d8] text-white font-[800] text-[0.95rem] flex items-center justify-center gap-2 shadow-[0_6px_20px_rgba(0,119,212,0.28)] disabled:opacity-50 active:scale-[0.98] transition-transform"
+            >
+              <Wifi size={20} />
+              <span>{loginBusy ? 'جاري الاتصال...' : 'دخول الإنترنت'}</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => navigate('/my-cards')}
+              className="w-full mt-2.5 py-2.5 rounded-2xl text-gray-400 font-bold text-sm flex items-center justify-center gap-1.5 active:scale-95 transition-transform"
+            >
+              <History size={14} /> سجل الكروت السابقة
+            </button>
+          </div>
+        </div>
+      )}
 
-      {/* Camera guide overlay — matching StarNET Hotspot capture UX */}
+      {/* Camera guide overlay — Hotspot offline barcode + OCR logic */}
       <CameraGuide
         open={!!showGuide}
-        mode={showGuide || 'ocr'}
+        mode={showGuide || 'barcode'}
         onClose={() => setShowGuide(null)}
         onCapture={async (file) => {
           try {
@@ -473,7 +515,8 @@ export default function Home() {
             }
             if (code) {
               setLoginCode(code)
-              if (loginInputRef.current) loginInputRef.current.focus()
+              setShowGuide(null)
+              setShowCodeInput(true)
             }
           } catch (e) {
             console.error('[CameraGuide] capture error:', e)
