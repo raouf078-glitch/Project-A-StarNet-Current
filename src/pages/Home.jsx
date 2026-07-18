@@ -1,19 +1,23 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
   Wifi, WifiOff, QrCode, Keyboard, Gift, Wrench, Settings, Phone, Sun, Moon,
   Router, MessageCircle, X, LogIn, Send, Facebook, Globe, CreditCard, RotateCw,
   Shield, Zap, Headphones, Signal, Rocket, Users, Power, Info, IdCard, Trophy, MapPin,
-  Star, Megaphone, Lightbulb, Tv, Wallet, ShoppingBag, ArrowLeft,
+  Star, Megaphone, Lightbulb, Tv, Wallet, ShoppingBag, ArrowLeft, Camera, History,
 } from 'lucide-react'
 import { useLiveShared } from '../lib/useLive'
 import {
   LOGO_URL, LOGO_DAY, LOGO_NIGHT, NETWORK_NAME, SUPPORT_PHONE, SUPPORT_WA, SOCIAL,
   getGateway, getLastCode, loginToHotspot, logoutFromHotspot, checkInternet, openHotspotStatus,
+  extractCardCode,
 } from '../netConfig'
 import { getTheme, toggleTheme } from '../theme'
 import HeroSlider from '../components/HeroSlider'
 import AssistantFab from '../components/AssistantFab'
+import ScanSheet from '../components/ScanSheet'
+import CameraGuide from '../components/CameraGuide'
+import { processImageBarcode, processImageOcr } from '../lib/barcode'
 
 const HEADER_BANNER = 'https://api.whacka.app/storage/v1/object/public/app-images/platform/chat/image/ae3a569e-c919-49ab-a00b-310b831991e6/62a40b30-c1d1-4933-b1bf-7367ce916b15.png'
 
@@ -22,6 +26,11 @@ export default function Home() {
   const [showContact, setShowContact] = useState(false)
   const [showLogout, setShowLogout] = useState(false)
   const [feature, setFeature] = useState(null)
+  const [showScanSheet, setShowScanSheet] = useState(false)
+  const [showGuide, setShowGuide] = useState(null) // null | 'barcode' | 'ocr'
+  const [loginCode, setLoginCode] = useState('')
+  const [loginBusy, setLoginBusy] = useState(false)
+  const loginInputRef = useRef(null)
   // null = جاري الفحص، true = متصل، false = غير متصل
   const [online, setOnline] = useState(null)
   const [checking, setChecking] = useState(true)
@@ -153,41 +162,58 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Primary login actions — cards only */}
-        <div>
-          <h2 className="text-base font-black text-gray-800 mb-2.5 px-1">تسجيل الدخول للإنترنت</h2>
-          <div className="grid grid-cols-3 gap-2.5">
+        {/* Primary login card — matching StarNET Hotspot layout */}
+        <div className="w-full bg-white dark:bg-[rgba(5,20,38,0.97)] rounded-[var(--sn-radius-lg,20px)] border border-[rgba(0,86,179,0.07)] dark:border-[rgba(0,180,216,0.22)] shadow-[var(--sn-glass-shadow)] p-[1.45rem_1.2rem_1.3rem]">
+          <h2 className="text-center text-[1.05rem] font-[800] text-[#0077d4] dark:text-[#90e0ef] mb-[1.1rem]">أدخل رقم الكرت</h2>
+          {/* Input row: camera | field | history */}
+          <div className="flex items-center gap-[0.45rem] mb-[1.2rem]">
+            {/* Camera button */}
             <button
-              onClick={() => navigate('/activate?tab=enter')}
-              className="bg-gradient-to-br from-blue-700 via-blue-600 to-blue-500 rounded-3xl p-4 shadow-lg shadow-blue-300 flex flex-col items-center text-center gap-2 active:scale-95 transition-transform"
+              type="button"
+              onClick={() => setShowScanSheet(true)}
+              className="flex-shrink-0 flex flex-col items-center justify-center gap-[0.18rem] w-[3.2rem] h-[3.2rem] rounded-[0.8rem] border-[1.5px] border-[rgba(0,119,212,0.22)] dark:border-[rgba(0,180,216,0.28)] bg-white dark:bg-[rgba(0,16,32,0.72)] text-[#3d5a80] dark:text-[#94a8c4] shadow-[0_2px_10px_rgba(0,45,98,0.04)] dark:shadow-[0_0_18px_rgba(0,180,216,0.08)] transition-all active:scale-95"
             >
-              <div className="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center">
-                <Keyboard size={24} className="text-white" />
-              </div>
-              <p className="text-white font-black text-xs leading-tight">إدخال الكود</p>
-              <p className="text-blue-100 text-[10px] leading-tight">يدوياً</p>
+              <Camera size={18} />
+              <span className="text-[0.54rem] font-bold leading-none">الكاميرا</span>
             </button>
+            {/* Input field */}
+            <div className="flex-1 min-w-0">
+              <input
+                ref={loginInputRef}
+                type="text"
+                autoComplete="off"
+                value={loginCode}
+                onChange={e => setLoginCode(e.target.value)}
+                placeholder="أدخل رقم الكرت هنا"
+                dir="ltr"
+                className="w-full h-[3.2rem] rounded-[0.8rem] border-[1.5px] border-[rgba(0,119,212,0.14)] dark:border-[rgba(0,180,216,0.2)] bg-[#f4f9ff] dark:bg-[rgba(0,16,32,0.5)] px-3 text-center text-[0.95rem] font-bold tracking-widest text-gray-800 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:border-[#0077d4] dark:focus:border-[#48cae4] transition-colors"
+              />
+            </div>
+            {/* History button */}
             <button
-              onClick={() => navigate('/activate?tab=scan')}
-              className="bg-gradient-to-br from-cyan-400 via-teal-400 to-cyan-500 rounded-3xl p-4 shadow-lg shadow-cyan-200 flex flex-col items-center text-center gap-2 active:scale-95 transition-transform"
+              type="button"
+              onClick={() => navigate('/my-cards')}
+              className="flex-shrink-0 flex flex-col items-center justify-center gap-[0.18rem] w-[3.2rem] h-[3.2rem] rounded-[0.8rem] border-[1.5px] border-[rgba(0,119,212,0.22)] dark:border-[rgba(0,180,216,0.28)] bg-white dark:bg-[rgba(0,16,32,0.72)] text-[#3d5a80] dark:text-[#94a8c4] shadow-[0_2px_10px_rgba(0,45,98,0.04)] dark:shadow-[0_0_18px_rgba(0,180,216,0.08)] transition-all active:scale-95"
             >
-              <div className="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center">
-                <QrCode size={24} className="text-white" />
-              </div>
-              <p className="text-white font-black text-xs leading-tight">مسح الباركود</p>
-              <p className="text-cyan-50 text-[10px] leading-tight">بالكاميرا</p>
-            </button>
-            <button
-              onClick={() => navigate('/activate?tab=read')}
-              className="bg-gradient-to-br from-emerald-500 via-emerald-400 to-teal-400 rounded-3xl p-4 shadow-lg shadow-emerald-200 flex flex-col items-center text-center gap-2 active:scale-95 transition-transform"
-            >
-              <div className="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center">
-                <IdCard size={24} className="text-white" />
-              </div>
-              <p className="text-white font-black text-xs leading-tight">قراءة البطاقة</p>
-              <p className="text-emerald-50 text-[10px] leading-tight">بالكاميرا</p>
+              <History size={18} />
+              <span className="text-[0.54rem] font-bold leading-none">السجل</span>
             </button>
           </div>
+          {/* Submit button */}
+          <button
+            type="button"
+            onClick={() => {
+              const c = extractCardCode(loginCode)
+              if (!c || loginBusy) return
+              setLoginBusy(true)
+              loginToHotspot({ username: c, recordCode: true })
+            }}
+            disabled={loginBusy || !loginCode.trim()}
+            className="relative w-full h-[3.1rem] rounded-[0.85rem] bg-gradient-to-l from-[#0077d4] to-[#00b4d8] text-white font-[800] text-[0.95rem] flex items-center justify-center gap-2 shadow-[0_6px_20px_rgba(0,119,212,0.28)] disabled:opacity-50 active:scale-[0.98] transition-transform overflow-hidden"
+          >
+            <Wifi size={20} />
+            <span>{loginBusy ? 'جاري الاتصال...' : 'دخول الإنترنت'}</span>
+          </button>
         </div>
 
         {/* Last used card — quick reuse */}
@@ -423,6 +449,37 @@ export default function Home() {
 
       {/* زر مساعد ستار نت العائم */}
       <AssistantFab />
+
+      {/* Scan sheet — matching StarNET Hotspot camera chooser */}
+      <ScanSheet
+        open={showScanSheet}
+        onClose={() => setShowScanSheet(false)}
+        onChooseBarcode={() => setShowGuide('barcode')}
+        onChooseOcr={() => setShowGuide('ocr')}
+      />
+
+      {/* Camera guide overlay — matching StarNET Hotspot capture UX */}
+      <CameraGuide
+        open={!!showGuide}
+        mode={showGuide || 'ocr'}
+        onClose={() => setShowGuide(null)}
+        onCapture={async (file) => {
+          try {
+            let code = null
+            if (showGuide === 'barcode') {
+              code = await processImageBarcode(file)
+            } else {
+              code = await processImageOcr(file)
+            }
+            if (code) {
+              setLoginCode(code)
+              if (loginInputRef.current) loginInputRef.current.focus()
+            }
+          } catch (e) {
+            console.error('[CameraGuide] capture error:', e)
+          }
+        }}
+      />
     </div>
   )
 }
