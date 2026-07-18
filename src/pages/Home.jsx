@@ -8,7 +8,7 @@ import {
 } from 'lucide-react'
 import { useLiveShared } from '../lib/useLive'
 import {
-  LOGO_URL, NETWORK_NAME, SUPPORT_PHONE, SUPPORT_WA, SOCIAL,
+  LOGO_URL, LOGO_DAY, LOGO_NIGHT, NETWORK_NAME, SUPPORT_PHONE, SUPPORT_WA, SOCIAL,
   getGateway, getLastCode, loginToHotspot, logoutFromHotspot, checkInternet, openHotspotStatus,
 } from '../netConfig'
 import { getTheme, toggleTheme } from '../theme'
@@ -156,26 +156,36 @@ export default function Home() {
         {/* Primary login actions — cards only */}
         <div>
           <h2 className="text-base font-black text-gray-800 mb-2.5 px-1">تسجيل الدخول للإنترنت</h2>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-3 gap-2.5">
             <button
               onClick={() => navigate('/activate?tab=enter')}
-              className="bg-gradient-to-br from-blue-700 via-blue-600 to-blue-500 rounded-3xl p-5 shadow-lg shadow-blue-300 flex flex-col items-center text-center gap-2 active:scale-95 transition-transform"
+              className="bg-gradient-to-br from-blue-700 via-blue-600 to-blue-500 rounded-3xl p-4 shadow-lg shadow-blue-300 flex flex-col items-center text-center gap-2 active:scale-95 transition-transform"
             >
-              <div className="w-14 h-14 rounded-2xl bg-white/20 flex items-center justify-center">
-                <Keyboard size={28} className="text-white" />
+              <div className="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center">
+                <Keyboard size={24} className="text-white" />
               </div>
-              <p className="text-white font-black text-sm leading-tight">إدخال الكود</p>
-              <p className="text-blue-100 text-[11px] leading-tight">اكتب كود البطاقة يدوياً</p>
+              <p className="text-white font-black text-xs leading-tight">إدخال الكود</p>
+              <p className="text-blue-100 text-[10px] leading-tight">يدوياً</p>
             </button>
             <button
               onClick={() => navigate('/activate?tab=scan')}
-              className="bg-gradient-to-br from-cyan-400 via-teal-400 to-cyan-500 rounded-3xl p-5 shadow-lg shadow-cyan-200 flex flex-col items-center text-center gap-2 active:scale-95 transition-transform"
+              className="bg-gradient-to-br from-cyan-400 via-teal-400 to-cyan-500 rounded-3xl p-4 shadow-lg shadow-cyan-200 flex flex-col items-center text-center gap-2 active:scale-95 transition-transform"
             >
-              <div className="w-14 h-14 rounded-2xl bg-white/20 flex items-center justify-center">
-                <QrCode size={28} className="text-white" />
+              <div className="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center">
+                <QrCode size={24} className="text-white" />
               </div>
-              <p className="text-white font-black text-sm leading-tight">مسح الباركود</p>
-              <p className="text-cyan-50 text-[11px] leading-tight">امسح كود البطاقة بالكاميرا</p>
+              <p className="text-white font-black text-xs leading-tight">مسح الباركود</p>
+              <p className="text-cyan-50 text-[10px] leading-tight">بالكاميرا</p>
+            </button>
+            <button
+              onClick={() => navigate('/activate?tab=read')}
+              className="bg-gradient-to-br from-emerald-500 via-emerald-400 to-teal-400 rounded-3xl p-4 shadow-lg shadow-emerald-200 flex flex-col items-center text-center gap-2 active:scale-95 transition-transform"
+            >
+              <div className="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center">
+                <IdCard size={24} className="text-white" />
+              </div>
+              <p className="text-white font-black text-xs leading-tight">قراءة البطاقة</p>
+              <p className="text-emerald-50 text-[10px] leading-tight">بالكاميرا</p>
             </button>
           </div>
         </div>

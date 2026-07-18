@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { checkInternet, LOGO_URL } from '../netConfig'
+import { checkInternet, LOGO_DAY, LOGO_NIGHT } from '../netConfig'
 
 // شاشة بداية أنيقة بهوية ستار نت الجديدة: خلفية فاتحة ناعمة،
 // الشعار في الوسط مع حركة Fade، عبارة ترحيب، عبارات متغيّرة أثناء
@@ -64,7 +64,7 @@ export default function Splash({ onDone }) {
       <div className="absolute inset-0 flex flex-col items-center justify-center px-6 -mt-[4%]">
         <div className="w-full flex justify-center animate-[fadeIn_.8s_ease]" dir="ltr">
           <img
-            src={LOGO_URL}
+            src={document.documentElement.classList.contains('dark') ? LOGO_NIGHT : LOGO_DAY}
             alt="StarNET"
             className="w-[72vw] max-w-[360px] block object-contain drop-shadow-[0_10px_28px_rgba(20,80,160,0.18)]"
             draggable={false}

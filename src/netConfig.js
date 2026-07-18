@@ -10,6 +10,9 @@ const CODES_KEY = 'starnet_recent_codes'
 export const LOGO_URL =
   'https://api.whacka.app/storage/v1/object/public/app-images/ca79f49f-ce1e-43ca-93f5-1080afd86272/images/starnet_logo.png'
 
+export const LOGO_DAY = 'https://raw.githubusercontent.com/raouf078-glitch/starnet-hotspot/main/img/starnet-logo-transparent.png'
+export const LOGO_NIGHT = 'https://raw.githubusercontent.com/raouf078-glitch/starnet-hotspot/main/img/starnet-logo-dark.png'
+
 export const NETWORK_NAME = 'ستار نت'
 
 // رقم الدعم والتواصل

@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { Building2, User, Copy, Check, Phone, Camera, Star } from 'lucide-react'
 import {
-  LOGO_URL, DEPOSIT_NAME, DEPOSIT_ACCOUNTS, SUPPORT_PHONE, SUPPORT_WA, SOCIAL,
+  LOGO_DAY, LOGO_NIGHT, DEPOSIT_NAME, DEPOSIT_ACCOUNTS, SUPPORT_PHONE, SUPPORT_WA, SOCIAL,
 } from '../netConfig'
 import PageHeader from '../components/PageHeader'
 
@@ -65,7 +65,7 @@ export default function Deposit() {
         {/* Logo */}
         <div className="flex justify-center">
           {!logoErr ? (
-            <img src={LOGO_URL} alt="ستار نت" onError={() => setLogoErr(true)} className="h-20 object-contain" />
+            <img src={document.documentElement.classList.contains('dark') ? LOGO_NIGHT : LOGO_DAY} alt="ستار نت" onError={() => setLogoErr(true)} className="h-20 object-contain" />
           ) : (
             <div className="flex items-center gap-2 text-blue-700">
               <Star size={28} fill="currentColor" />
