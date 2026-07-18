@@ -1,5 +1,5 @@
 import { HashRouter, Routes, Route, Link, useLocation } from 'react-router-dom'
-import { Hop as Home, MapPin, Wrench, Store, Settings, Wallet as WalletIcon } from 'lucide-react'
+import { Hop as Home, MapPin, Wrench, Store, Settings } from 'lucide-react'
 import { useRef, useEffect, useState } from 'react'
 import HomePage from './pages/Home'
 import OffersPage from './pages/Offers'
@@ -15,16 +15,6 @@ import FeedbackPage from './pages/Feedback'
 import GuidePage from './pages/Guide'
 import AssistantPage from './pages/Assistant'
 import AdminAssistantPage from './pages/AdminAssistant'
-import WalletPage from './pages/Wallet'
-import TransactionHistoryPage from './pages/TransactionHistory'
-import DepositWalletPage from './pages/DepositWallet'
-import RewardsPage from './pages/Rewards'
-import StorePage from './pages/Store'
-import ProductDetailPage from './pages/ProductDetail'
-import CartPage from './pages/Cart'
-import CheckoutPage from './pages/Checkout'
-import PurchaseHistoryPage from './pages/PurchaseHistory'
-import SupportPage from './pages/Support'
 import Splash from './components/Splash'
 import './theme'
 
@@ -62,8 +52,8 @@ function TabBar() {
   if (pathname === '/assistant') return null
   const tabs = [
     { path: '/', icon: Home, label: 'الرئيسية' },
-    { path: '/store', icon: Store, label: 'المتجر' },
-    { path: '/wallet', icon: WalletIcon, label: 'المحفظة' },
+    { path: '/coverage', icon: MapPin, label: 'أماكن التغطية' },
+    { path: '/pos', icon: Store, label: 'نقاط البيع' },
     { path: '/tools', icon: Wrench, label: 'الأدوات' },
     { path: '/settings', icon: Settings, label: 'الإعدادات' },
   ]
@@ -120,16 +110,6 @@ export default function App() {
             <Route path="/assistant" element={<AssistantPage />} />
             <Route path="/admin" element={<AdminAssistantPage />} />
             <Route path="/admin/:section" element={<AdminAssistantPage />} />
-            <Route path="/wallet" element={<WalletPage />} />
-            <Route path="/wallet/transactions" element={<TransactionHistoryPage />} />
-            <Route path="/deposit-wallet" element={<DepositWalletPage />} />
-            <Route path="/wallet/rewards" element={<RewardsPage />} />
-            <Route path="/wallet/support" element={<SupportPage />} />
-            <Route path="/wallet/orders" element={<PurchaseHistoryPage />} />
-            <Route path="/store" element={<StorePage />} />
-            <Route path="/store/product/:id" element={<ProductDetailPage />} />
-            <Route path="/store/cart" element={<CartPage />} />
-            <Route path="/store/checkout" element={<CheckoutPage />} />
             <Route path="/settings" element={<SettingsPage />} />
           </Routes>
         </main>
