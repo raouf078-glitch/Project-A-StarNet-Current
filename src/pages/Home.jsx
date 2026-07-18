@@ -4,7 +4,7 @@ import {
   Wifi, WifiOff, QrCode, Keyboard, Gift, Wrench, Settings, Phone, Sun, Moon,
   Router, MessageCircle, X, LogIn, Send, Facebook, Globe, CreditCard, RotateCw,
   Shield, Zap, Headphones, Signal, Rocket, Users, Power, Info, IdCard, Trophy, MapPin,
-  Star, Megaphone, Lightbulb, Tv,
+  Star, Megaphone, Lightbulb, Tv, Wallet, ShoppingBag, ArrowLeft,
 } from 'lucide-react'
 import { useLiveShared } from '../lib/useLive'
 import {
@@ -265,6 +265,44 @@ export default function Home() {
               <p className="text-[10px] font-bold text-gray-600 leading-tight">{f.label}</p>
             </button>
           ))}
+        </div>
+      </div>
+
+      {/* ── Wallet & Store quick access (appended section) ── */}
+      <div className="px-4 mt-3 animate-sn-enter" style={{ animationDelay: '0.2s' }}>
+        <div className="sn-card--premium p-4">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="text-sm font-black text-gray-800 flex items-center gap-2">
+              <Wallet size={16} className="text-blue-600" />
+              المحفظة والمتجر
+            </h3>
+            <button onClick={() => navigate('/wallet')} className="text-xs font-bold text-blue-600">
+              عرض المحفظة <ArrowLeft size={10} className="inline" />
+            </button>
+          </div>
+          <div className="grid grid-cols-3 gap-2.5">
+            <button
+              onClick={() => navigate('/wallet')}
+              className="flex flex-col items-center gap-1.5 p-3 rounded-xl bg-blue-50 active:scale-95 transition-transform"
+            >
+              <Wallet size={20} className="text-blue-600" />
+              <span className="text-[10px] font-bold text-blue-700">المحفظة</span>
+            </button>
+            <button
+              onClick={() => navigate('/store')}
+              className="flex flex-col items-center gap-1.5 p-3 rounded-xl bg-emerald-50 active:scale-95 transition-transform"
+            >
+              <ShoppingBag size={20} className="text-emerald-600" />
+              <span className="text-[10px] font-bold text-emerald-700">المتجر</span>
+            </button>
+            <button
+              onClick={() => navigate('/rewards')}
+              className="flex flex-col items-center gap-1.5 p-3 rounded-xl bg-amber-50 active:scale-95 transition-transform"
+            >
+              <Trophy size={20} className="text-amber-600" />
+              <span className="text-[10px] font-bold text-amber-700">المكافآت</span>
+            </button>
+          </div>
         </div>
       </div>
 

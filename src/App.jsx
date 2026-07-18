@@ -1,5 +1,5 @@
 import { HashRouter, Routes, Route, Link, useLocation } from 'react-router-dom'
-import { Hop as Home, MapPin, Wrench, Store, Settings } from 'lucide-react'
+import { Hop as Home, MapPin, Wrench, Store, Settings, Wallet } from 'lucide-react'
 import { useRef, useEffect, useState } from 'react'
 import HomePage from './pages/Home'
 import OffersPage from './pages/Offers'
@@ -16,6 +16,13 @@ import GuidePage from './pages/Guide'
 import AssistantPage from './pages/Assistant'
 import AdminAssistantPage from './pages/AdminAssistant'
 import Splash from './components/Splash'
+import WalletPage from './pages/Wallet'
+import WalletHistoryPage from './pages/WalletHistory'
+import RewardsPage from './pages/Rewards'
+import StorePage from './pages/Store'
+import CartPage from './pages/Cart'
+import CheckoutPage from './pages/Checkout'
+import PurchasesPage from './pages/Purchases'
 import './theme'
 
 function Particles() {
@@ -56,6 +63,7 @@ function TabBar() {
     { path: '/pos', icon: Store, label: 'نقاط البيع' },
     { path: '/tools', icon: Wrench, label: 'الأدوات' },
     { path: '/settings', icon: Settings, label: 'الإعدادات' },
+    { path: '/wallet', icon: Wallet, label: 'المحفظة' },
   ]
   return (
     <nav className="fixed bottom-0 left-0 right-0 sn-nav z-20 pb-[env(safe-area-inset-bottom,0px)]">
@@ -111,6 +119,13 @@ export default function App() {
             <Route path="/admin" element={<AdminAssistantPage />} />
             <Route path="/admin/:section" element={<AdminAssistantPage />} />
             <Route path="/settings" element={<SettingsPage />} />
+            <Route path="/wallet" element={<WalletPage />} />
+            <Route path="/wallet/history" element={<WalletHistoryPage />} />
+            <Route path="/rewards" element={<RewardsPage />} />
+            <Route path="/store" element={<StorePage />} />
+            <Route path="/cart" element={<CartPage />} />
+            <Route path="/checkout" element={<CheckoutPage />} />
+            <Route path="/purchases" element={<PurchasesPage />} />
           </Routes>
         </main>
         <TabBar />
