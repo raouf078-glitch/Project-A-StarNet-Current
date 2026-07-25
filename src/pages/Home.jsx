@@ -14,11 +14,10 @@ import {
 } from '../netConfig'
 import { getTheme, toggleTheme } from '../theme'
 import HeroSlider from '../components/HeroSlider'
+import StarNetHero from '../components/StarNetHero'
 import AssistantFab from '../components/AssistantFab'
 import CameraGuide from '../components/CameraGuide'
 import { processImageBarcode, processImageOcr } from '../lib/barcode'
-
-const HEADER_BANNER = 'https://api.whacka.app/storage/v1/object/public/app-images/platform/chat/image/ae3a569e-c919-49ab-a00b-310b831991e6/62a40b30-c1d1-4933-b1bf-7367ce916b15.png'
 
 export default function Home() {
   const navigate = useNavigate()
@@ -85,24 +84,8 @@ export default function Home() {
 
   return (
     <div className="min-h-full bg-[rgb(var(--color-bg))]">
-      {/* Full-width hero header banner */}
-      <div className="w-full page-hero pt-[env(safe-area-inset-top,0px)] shadow-lg relative overflow-hidden">
-        <div className="absolute -top-8 left-1/4 w-32 h-32 rounded-full bg-white/10 blur-2xl pointer-events-none animate-glow" />
-        <div className="absolute -bottom-10 right-1/4 w-40 h-40 rounded-full bg-sky-300/10 blur-3xl pointer-events-none" />
-        <div className="relative w-full overflow-hidden" style={{ paddingTop: '50%' }}>
-          <img
-            src={HEADER_BANNER}
-            alt="ستار نت"
-            loading="eager"
-            decoding="async"
-            fetchpriority="high"
-            className="absolute inset-0 w-full h-full object-cover object-top"
-            style={{ objectPosition: 'center top' }}
-          />
-          {/* غطاء سفلي لإخفاء كلمة v2 ودمج البانر مع الخلفية */}
-          <div className="absolute bottom-0 left-0 right-0 h-[14%] bg-gradient-to-t from-blue-700 to-transparent" />
-        </div>
-      </div>
+      {/* StarNet Hotspot original header */}
+      <StarNetHero />
 
       {/* Announcements ticker */}
       {activeAnnouncements.length > 0 && (
@@ -255,6 +238,44 @@ export default function Home() {
           ))}
         </div>
 
+        {/* ── Wallet & Store quick access (moved below Instructions / Contact Us / Rate Service) ── */}
+        <div className="animate-sn-enter" style={{ animationDelay: '0.2s' }}>
+          <div className="sn-card--premium p-4">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-sm font-black text-gray-800 flex items-center gap-2">
+                <Wallet size={16} className="text-blue-600" />
+                المحفظة والمتجر
+              </h3>
+              <button onClick={() => navigate('/wallet')} className="text-xs font-bold text-blue-600">
+                عرض المحفظة <ArrowLeft size={10} className="inline" />
+              </button>
+            </div>
+            <div className="grid grid-cols-3 gap-2.5">
+              <button
+                onClick={() => navigate('/wallet')}
+                className="flex flex-col items-center gap-1.5 p-3 rounded-xl bg-blue-50 active:scale-95 transition-transform"
+              >
+                <Wallet size={20} className="text-blue-600" />
+                <span className="text-[10px] font-bold text-blue-700">المحفظة</span>
+              </button>
+              <button
+                onClick={() => navigate('/store')}
+                className="flex flex-col items-center gap-1.5 p-3 rounded-xl bg-emerald-50 active:scale-95 transition-transform"
+              >
+                <ShoppingBag size={20} className="text-emerald-600" />
+                <span className="text-[10px] font-bold text-emerald-700">المتجر</span>
+              </button>
+              <button
+                onClick={() => navigate('/rewards')}
+                className="flex flex-col items-center gap-1.5 p-3 rounded-xl bg-amber-50 active:scale-95 transition-transform"
+              >
+                <Trophy size={20} className="text-amber-600" />
+                <span className="text-[10px] font-bold text-amber-700">المكافآت</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
         {/* Hero slider */}
         <HeroSlider navigate={navigate} onContact={() => setShowContact(true)} />
 
@@ -297,44 +318,6 @@ export default function Home() {
               <p className="text-[10px] font-bold text-gray-600 leading-tight">{f.label}</p>
             </button>
           ))}
-        </div>
-      </div>
-
-      {/* ── Wallet & Store quick access (appended section) ── */}
-      <div className="px-4 mt-3 animate-sn-enter" style={{ animationDelay: '0.2s' }}>
-        <div className="sn-card--premium p-4">
-          <div className="flex items-center justify-between mb-3">
-            <h3 className="text-sm font-black text-gray-800 flex items-center gap-2">
-              <Wallet size={16} className="text-blue-600" />
-              المحفظة والمتجر
-            </h3>
-            <button onClick={() => navigate('/wallet')} className="text-xs font-bold text-blue-600">
-              عرض المحفظة <ArrowLeft size={10} className="inline" />
-            </button>
-          </div>
-          <div className="grid grid-cols-3 gap-2.5">
-            <button
-              onClick={() => navigate('/wallet')}
-              className="flex flex-col items-center gap-1.5 p-3 rounded-xl bg-blue-50 active:scale-95 transition-transform"
-            >
-              <Wallet size={20} className="text-blue-600" />
-              <span className="text-[10px] font-bold text-blue-700">المحفظة</span>
-            </button>
-            <button
-              onClick={() => navigate('/store')}
-              className="flex flex-col items-center gap-1.5 p-3 rounded-xl bg-emerald-50 active:scale-95 transition-transform"
-            >
-              <ShoppingBag size={20} className="text-emerald-600" />
-              <span className="text-[10px] font-bold text-emerald-700">المتجر</span>
-            </button>
-            <button
-              onClick={() => navigate('/rewards')}
-              className="flex flex-col items-center gap-1.5 p-3 rounded-xl bg-amber-50 active:scale-95 transition-transform"
-            >
-              <Trophy size={20} className="text-amber-600" />
-              <span className="text-[10px] font-bold text-amber-700">المكافآت</span>
-            </button>
-          </div>
         </div>
       </div>
 
