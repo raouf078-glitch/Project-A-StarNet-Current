@@ -1,0 +1,324 @@
+# StarNET Platform
+
+# 006 - PURCHASE FLOW
+
+Version: 1.0
+
+Status: Extracted from Safa Wallet Store
+
+Target: StarNET
+
+---
+
+# Purpose
+
+This document defines the complete purchase workflow used by the Store.
+
+The workflow is migrated from the Safa Wallet Store project without changing the original financial logic.
+
+Only StarNET branding and business data will replace Safa-specific content.
+
+---
+
+# Purchase Flow
+
+Customer
+
+↓
+
+Open Store
+
+↓
+
+Select Product
+
+↓
+
+Review Product Details
+
+↓
+
+Confirm Purchase
+
+↓
+
+Wallet Balance Validation
+
+↓
+
+Database RPC
+
+↓
+
+Wallet Transaction
+
+↓
+
+Order Creation
+
+↓
+
+Order Items Creation
+
+↓
+
+Product Delivery
+
+↓
+
+Notification
+
+---
+
+# Purchase Initialization
+
+The purchase begins only after the customer confirms the order.
+
+No purchase is executed automatically.
+
+---
+
+# Product Validation
+
+Before payment the system validates:
+
+- Product exists
+- Product is active
+- Product is available
+- Requested quantity is valid
+
+If validation fails
+
+Purchase stops immediately.
+
+---
+
+# Wallet Validation
+
+Before any deduction
+
+System validates:
+
+- Customer is authenticated
+- Wallet exists
+- Wallet is active
+- Balance is sufficient
+
+No balance deduction occurs before validation.
+
+---
+
+# Database Execution
+
+After validation
+
+Application calls the purchase RPC.
+
+The database becomes responsible for the financial operation.
+
+Application does not execute financial calculations.
+
+---
+
+# Database Responsibilities
+
+Database performs the following sequence atomically.
+
+1.
+
+Verify wallet balance.
+
+↓
+
+2.
+
+Verify product availability.
+
+↓
+
+3.
+
+Create Order.
+
+↓
+
+4.
+
+Create Order Items.
+
+↓
+
+5.
+
+Create Wallet Transaction.
+
+↓
+
+6.
+
+Deduct Wallet Balance.
+
+↓
+
+7.
+
+Allocate purchased product.
+
+↓
+
+8.
+
+Commit transaction.
+
+If any step fails
+
+Everything is rolled back.
+
+No partial purchase is allowed.
+
+---
+
+# Wallet Transaction
+
+Every successful purchase creates one financial transaction.
+
+Transaction includes:
+
+- Wallet
+- Customer
+- Product
+- Amount
+- Transaction Type
+- Timestamp
+- Reference
+
+---
+
+# Order Creation
+
+One purchase generates one Order.
+
+One Order may contain one or multiple Order Items.
+
+Order Status is initialized according to the original Safa implementation.
+
+---
+
+# Product Delivery
+
+After successful database execution
+
+Purchased product becomes available to the customer.
+
+For StarNET
+
+This stage will later be connected to:
+
+- Internet Cards
+- Internet Packages
+- Future Network Services
+
+Delivery logic remains independent from payment logic.
+
+---
+
+# Notification
+
+Successful purchase generates:
+
+- Purchase Notification
+
+- Wallet Balance Update
+
+Notification content will use StarNET branding.
+
+Notification workflow remains unchanged.
+
+---
+
+# Failed Purchase
+
+If any validation fails
+
+No financial records are created.
+
+Wallet remains unchanged.
+
+No order is generated.
+
+No product is delivered.
+
+Customer receives the corresponding error message.
+
+---
+
+# Atomic Transaction Policy
+
+Purchase execution must be atomic.
+
+Either:
+
+Everything succeeds.
+
+Or:
+
+Everything is cancelled.
+
+Partial execution is strictly prohibited.
+
+---
+
+# Security Rules
+
+The client application never performs:
+
+- Wallet deduction
+- Balance calculation
+- Financial validation
+- Order approval
+
+The client only sends the purchase request.
+
+Supabase executes the financial operation.
+
+---
+
+# StarNET Customization
+
+Replace
+
+- Safa Products
+
+- Safa Branding
+
+- Safa Images
+
+- Safa Categories
+
+Keep
+
+- Purchase Workflow
+
+- Financial Validation
+
+- Wallet Logic
+
+- Database Procedures
+
+- Transaction Recording
+
+- Order Workflow
+
+---
+
+# Migration Policy
+
+The purchase engine will be migrated exactly as implemented in the Safa Wallet Store project.
+
+Only StarNET business content will replace Safa business content.
+
+No changes will be made to the purchase business logic.
+
+---
+
+End of Document

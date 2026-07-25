@@ -1,0 +1,157 @@
+# StarNET Platform
+
+# 017 - CODE EXTRACTION
+
+Version: 1.0
+
+Status: Ready for Migration
+
+Source: Safa Wallet Store
+
+Target: StarNET
+
+---
+
+# Purpose
+
+This document confirms that the required Financial Core has been extracted from the Safa Wallet Store project.
+
+Only these modules will be migrated.
+
+---
+
+## Financial Core
+
+Status
+
+READY
+
+Contains
+
+- Wallet
+
+- Wallet Transactions
+
+- Deposit System
+
+- Store
+
+- Purchase Flow
+
+- Notifications
+
+- Database Functions
+
+- RPC
+
+- Triggers
+
+- RLS
+
+---
+
+## Database
+
+Status
+
+READY
+
+Contains
+
+- Tables
+
+- Relationships
+
+- Constraints
+
+- Policies
+
+- Storage
+
+---
+
+## React Layer
+
+Status
+
+READY
+
+Contains
+
+- Wallet Pages
+
+- Store Pages
+
+- Deposit Pages
+
+- Notification Pages
+
+Only branding changes.
+
+---
+
+## StarNET Changes
+
+Replace
+
+- Safa
+
+↓
+
+StarNET
+
+Replace
+
+- Logo
+
+↓
+
+StarNET Logo
+
+Replace
+
+- Deposit Accounts
+
+↓
+
+StarNET Deposit Accounts
+
+Replace
+
+- Products
+
+↓
+
+StarNET Products
+
+Nothing else.
+
+---
+
+## Migration Status
+
+Financial Core
+
+READY
+
+UI
+
+READY
+
+Database
+
+READY
+
+Storage
+
+READY
+
+RPC
+
+READY
+
+Project is ready for migration.
+
+---
+
+End of Document

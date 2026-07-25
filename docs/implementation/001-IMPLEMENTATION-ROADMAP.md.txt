@@ -1,0 +1,117 @@
+# StarNET Platform
+
+# IMPLEMENTATION ROADMAP
+
+Version: 1.0
+
+Status: Ready
+
+---
+
+## Goal
+
+Build StarNET by migrating the stable Financial Core from Safa Wallet Store.
+
+No redesign.
+
+No optimization.
+
+Only migration.
+
+---
+
+## Phase 1
+
+Supabase
+
+Status
+
+NOT STARTED
+
+Tasks
+
+- Create Project
+
+- Configure Environment
+
+- Connect React
+
+---
+
+## Phase 2
+
+Database
+
+Tasks
+
+- Import Tables
+
+- Import Relationships
+
+- Import Storage
+
+- Import RLS
+
+- Import RPC
+
+- Import Triggers
+
+---
+
+## Phase 3
+
+Financial Core
+
+Tasks
+
+- Wallet
+
+- Deposits
+
+- Purchases
+
+- Notifications
+
+---
+
+## Phase 4
+
+StarNET Identity
+
+Replace
+
+- Logo
+
+- Name
+
+- Deposit Accounts
+
+- Products
+
+- Contact Information
+
+---
+
+## Phase 5
+
+Testing
+
+Wallet
+
+Deposit
+
+Purchase
+
+Notifications
+
+Transaction History
+
+---
+
+## Rule
+
+Never redesign Financial Core.
+
+---
+
+End

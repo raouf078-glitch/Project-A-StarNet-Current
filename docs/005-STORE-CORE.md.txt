@@ -1,0 +1,254 @@
+# StarNET Platform
+
+# 005 - STORE CORE
+
+Version: 1.0
+
+Status: Extracted from Safa Wallet Store
+
+Target: StarNET
+
+---
+
+# Purpose
+
+This document defines the Store module that will be migrated from the Safa Wallet Store project into StarNET.
+
+The Store business logic will remain unchanged.
+
+Only branding, products, and StarNET-specific business content will replace the original Safa data.
+
+---
+
+# Store Responsibility
+
+The Store is responsible for presenting products that customers can purchase using their StarNET Wallet.
+
+The Store does not perform financial calculations.
+
+All financial operations are delegated to Wallet Services and Database RPC functions.
+
+---
+
+# Store Structure
+
+The Store consists of the following components.
+
+Products
+
+↓
+
+Categories
+
+↓
+
+Product Details
+
+↓
+
+Purchase Confirmation
+
+↓
+
+Wallet Payment
+
+↓
+
+Order Creation
+
+↓
+
+Notification
+
+---
+
+# Products
+
+Each product contains:
+
+- Product ID
+- Product Name
+- Description
+- Category
+- Image
+- Price
+- Availability Status
+
+The Store only displays products that are available.
+
+Unavailable products cannot be purchased.
+
+---
+
+# Categories
+
+Products are grouped into categories.
+
+For StarNET the categories will be configured according to business needs.
+
+Examples:
+
+- Internet Cards
+- Internet Packages
+- Network Devices
+- Accessories
+
+The category system remains unchanged.
+
+---
+
+# Product Details
+
+Before purchasing, the customer can view:
+
+- Product Image
+- Product Description
+- Price
+- Availability
+
+No financial operation occurs on this screen.
+
+---
+
+# Purchase Confirmation
+
+When the customer selects a product:
+
+Application opens a confirmation dialog.
+
+The confirmation screen displays:
+
+- Product
+- Quantity
+- Total Cost
+
+The customer must explicitly confirm the purchase.
+
+No automatic purchase is allowed.
+
+---
+
+# Payment Source
+
+The only payment source for Store purchases is:
+
+StarNET Wallet
+
+No external payment gateways are involved.
+
+---
+
+# Purchase Validation
+
+Before completing the purchase, the system validates:
+
+- User is authenticated
+- Product is available
+- Requested quantity is valid
+- Wallet balance is sufficient
+
+If any validation fails, the purchase is rejected.
+
+---
+
+# Successful Purchase
+
+When validation succeeds:
+
+Database RPC is executed.
+
+Database performs:
+
+- Balance deduction
+- Transaction creation
+- Order creation
+- Order Items creation
+- Product allocation (if required)
+
+Application receives success response.
+
+Customer receives purchased product.
+
+---
+
+# Failed Purchase
+
+If the operation fails:
+
+Wallet remains unchanged.
+
+No order is created.
+
+No transaction is recorded.
+
+Customer receives an appropriate error message.
+
+---
+
+# Order Creation
+
+Every successful purchase generates:
+
+One Order
+
+↓
+
+One or more Order Items
+
+↓
+
+One Wallet Transaction
+
+↓
+
+One Notification
+
+The Store never bypasses this sequence.
+
+---
+
+# Notifications
+
+Store-related notifications include:
+
+- Purchase Completed
+- Purchase Failed
+- Wallet Balance Updated
+
+Notification content will be customized for StarNET.
+
+Notification workflow remains unchanged.
+
+---
+
+# StarNET Customization
+
+Replace:
+
+- Safa Branding
+- Safa Products
+- Safa Categories
+- Safa Images
+
+Keep:
+
+- Store Logic
+- Purchase Logic
+- Validation Logic
+- Wallet Integration
+- Order Workflow
+- Notification Workflow
+
+---
+
+# Migration Policy
+
+The Store module will preserve the original Safa implementation.
+
+Only StarNET branding, products, and business content will replace the original data.
+
+No changes will be made to the Store business logic.
+
+---
+
+End of Document

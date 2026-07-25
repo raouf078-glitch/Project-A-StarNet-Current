@@ -1,0 +1,269 @@
+# StarNET Platform
+
+# 004 - DEPOSIT SYSTEM
+
+Version: 1.0
+
+Status: Extracted from Safa Wallet Store
+
+Target: StarNET
+
+---
+
+# Purpose
+
+This document defines the complete deposit workflow.
+
+The workflow will be migrated from Safa Wallet Store without changing its business logic.
+
+Only StarNET branding and deposit account information will replace Safa data.
+
+---
+
+# Deposit Workflow
+
+Customer
+
+↓
+
+Open Wallet
+
+↓
+
+Select Deposit
+
+↓
+
+Choose Deposit Account
+
+↓
+
+Enter Deposit Amount
+
+↓
+
+Upload Transfer Receipt (Optional if required by selected account)
+
+↓
+
+Submit Deposit Request
+
+↓
+
+Database creates Deposit Request
+
+↓
+
+Status = Pending
+
+↓
+
+Administrator Review
+
+↓
+
+Approved
+
+↓
+
+Wallet Balance Updated
+
+↓
+
+Wallet Transaction Created
+
+↓
+
+Customer Notification
+
+---
+
+# Deposit Request
+
+Every deposit creates one request.
+
+The request is never converted directly into balance.
+
+Balance changes only after approval.
+
+---
+
+# Deposit Status
+
+Supported states
+
+Pending
+
+Customer submitted the request.
+
+Waiting for administrator review.
+
+---
+
+Approved
+
+Deposit accepted.
+
+Wallet balance increased.
+
+Transaction created.
+
+Notification sent.
+
+---
+
+Rejected
+
+Deposit rejected.
+
+Wallet balance unchanged.
+
+Customer receives rejection notification.
+
+---
+
+# Deposit Accounts
+
+Deposit accounts are managed from the Administration Panel.
+
+Each account contains
+
+- Account Name
+- Bank / Wallet Name
+- Account Number
+- IBAN (if applicable)
+- Account Holder
+- QR Code (optional)
+- Status
+
+For StarNET
+
+All Safa deposit accounts will be deleted.
+
+New StarNET accounts will be created.
+
+The system behavior remains unchanged.
+
+---
+
+# Deposit Receipt
+
+Receipt image is uploaded to Supabase Storage.
+
+The database stores only the file reference.
+
+Receipt is linked to the deposit request.
+
+---
+
+# Validation
+
+Before creating a deposit request
+
+System validates
+
+- Logged in user
+- Valid deposit account
+- Valid amount
+- Receipt upload success (when required)
+
+Only then the request is created.
+
+---
+
+# Administrator Workflow
+
+Administrator opens pending deposits.
+
+↓
+
+Reviews customer information.
+
+↓
+
+Reviews receipt.
+
+↓
+
+Approves or rejects request.
+
+↓
+
+Database executes financial operation.
+
+No manual wallet editing.
+
+---
+
+# Approval Process
+
+When approved
+
+Database
+
+- Updates wallet balance
+- Creates wallet transaction
+- Creates audit record
+- Sends notification
+
+Application only refreshes the user interface.
+
+---
+
+# Rejection Process
+
+When rejected
+
+Wallet remains unchanged.
+
+Deposit request status becomes
+
+Rejected
+
+Customer receives notification.
+
+No financial transaction is created.
+
+---
+
+# Security Rules
+
+Customers cannot approve deposits.
+
+Customers cannot edit approved requests.
+
+Administrators cannot bypass wallet procedures.
+
+Every approval must create a financial record.
+
+---
+
+# StarNET Customization
+
+Replace
+
+- Safa Name
+- Safa Logo
+- Safa Deposit Accounts
+- Safa Contact Information
+
+Keep
+
+- Deposit Workflow
+- Approval Workflow
+- Wallet Update Logic
+- Transaction Recording
+- Notification Logic
+- Administrative Review
+
+---
+
+# Migration Policy
+
+No changes to deposit logic.
+
+Only replace StarNET business information.
+
+---
+
+End of Document

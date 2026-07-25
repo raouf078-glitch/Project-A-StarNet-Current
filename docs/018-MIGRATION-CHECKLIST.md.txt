@@ -1,0 +1,135 @@
+# StarNET Platform
+
+# 018 - MIGRATION CHECKLIST
+
+Version: 1.0
+
+Status: Final
+
+---
+
+# Migration Rules
+
+Before implementation
+
+Confirm the following.
+
+---
+
+DATABASE
+
+☐ Tables Imported
+
+☐ Relationships Verified
+
+☐ Constraints Verified
+
+☐ Storage Created
+
+☐ RLS Enabled
+
+☐ RPC Imported
+
+☐ Triggers Imported
+
+---
+
+FINANCIAL CORE
+
+☐ Wallet Working
+
+☐ Deposit Working
+
+☐ Purchase Working
+
+☐ Notifications Working
+
+☐ Transactions Working
+
+---
+
+IDENTITY
+
+☐ Safa Name Removed
+
+☐ StarNET Name Added
+
+☐ StarNET Logo Added
+
+☐ Deposit Accounts Updated
+
+☐ Products Updated
+
+☐ Contact Information Updated
+
+---
+
+UI
+
+☐ Wallet Screen Verified
+
+☐ Store Screen Verified
+
+☐ Deposit Screen Verified
+
+☐ Notification Screen Verified
+
+☐ Dark Mode Verified
+
+☐ Light Mode Verified
+
+---
+
+TESTING
+
+☐ Login
+
+☐ Wallet
+
+☐ Deposit
+
+☐ Deposit Approval
+
+☐ Purchase
+
+☐ Notifications
+
+☐ Transaction History
+
+☐ Store
+
+☐ Logout
+
+---
+
+FINAL RULE
+
+If any Financial Core function behaves differently from the original Safa Wallet Store implementation
+
+STOP
+
+Fix the migration
+
+Do not redesign.
+
+Do not optimize.
+
+Do not replace business logic.
+
+Migration must match the original implementation before any future improvements.
+
+---
+
+Version 1 Goal
+
+Stable
+
+Working
+
+Identical Financial Behavior
+
+StarNET Identity
+
+---
+
+End of Document

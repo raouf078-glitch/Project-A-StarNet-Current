@@ -1,0 +1,237 @@
+# StarNET Platform
+
+# 015 - INTEGRATION LAYER
+
+Version: 1.0
+
+Status: Architecture Lock
+
+Source: Safa Wallet Store
+
+Target: StarNET
+
+---
+
+# Purpose
+
+This document defines the Integration Layer between the immutable Financial Core and the customizable StarNET User Interface.
+
+The Integration Layer is the only layer allowed to communicate with both the UI and the Financial Core.
+
+No UI component may directly access financial tables.
+
+---
+
+# Architecture
+
+Financial Core
+
+↓
+
+Integration Layer
+
+↓
+
+React UI
+
+The UI never communicates directly with database financial tables.
+
+---
+
+# Financial Core
+
+Read Only
+
+Contains
+
+- Wallet
+- Transactions
+- Deposits
+- Purchases
+- Orders
+- Notifications
+- RPC
+- Triggers
+- RLS
+
+This layer is protected.
+
+No modifications are allowed.
+
+---
+
+# Integration Layer
+
+Responsibilities
+
+- Read financial data
+
+- Call RPC functions
+
+- Format data for UI
+
+- Handle loading states
+
+- Handle success states
+
+- Handle error states
+
+This layer contains no financial calculations.
+
+---
+
+# UI Layer
+
+Responsibilities
+
+- Display information
+
+- Collect user input
+
+- Navigation
+
+- Animations
+
+- Branding
+
+- Themes
+
+- Localization
+
+The UI never modifies financial data.
+
+---
+
+# Data Flow
+
+Customer
+
+↓
+
+React Screen
+
+↓
+
+Integration Layer
+
+↓
+
+Supabase RPC
+
+↓
+
+Financial Core
+
+↓
+
+Response
+
+↓
+
+Integration Layer
+
+↓
+
+React Screen
+
+---
+
+# Allowed Communication
+
+UI
+
+↓
+
+Integration Layer
+
+Integration Layer
+
+↓
+
+RPC
+
+RPC
+
+↓
+
+Financial Core
+
+No shortcuts are allowed.
+
+---
+
+# Forbidden Communication
+
+React
+
+✕
+
+Wallet Tables
+
+React
+
+✕
+
+Wallet Balance
+
+React
+
+✕
+
+Transactions
+
+React
+
+✕
+
+Deposit Approval
+
+React
+
+✕
+
+Purchase Logic
+
+All financial operations must pass through Integration Layer.
+
+---
+
+# StarNET Responsibilities
+
+The Integration Layer may change
+
+- Icons
+
+- Labels
+
+- Colors
+
+- Layout
+
+- Navigation
+
+- Branding
+
+- Customer Experience
+
+The Financial Core remains unchanged.
+
+---
+
+# Future Development
+
+All future improvements must begin in the Integration Layer.
+
+Financial Core modifications require a separate architecture review.
+
+---
+
+# Migration Policy
+
+During migration only the Integration Layer and UI Layer may be customized.
+
+The Financial Core extracted from Safa Wallet Store remains unchanged.
+
+---
+
+End of Document

@@ -1,0 +1,207 @@
+# StarNET Platform
+
+# 014 - DATABASE TRIGGERS
+
+Version: 1.0
+
+Status: Extracted from Safa Wallet Store
+
+Target: StarNET
+
+---
+
+# Purpose
+
+This document defines the automatic database behavior implemented through Triggers and Procedures.
+
+The objective is to preserve the original automation used by the Safa Wallet Store project.
+
+No trigger behavior shall be redesigned during migration.
+
+---
+
+# Principle
+
+Financial automation belongs to the database.
+
+React is responsible only for:
+
+- Displaying data
+- Sending requests
+- Refreshing the interface
+
+React never executes financial automation.
+
+---
+
+# Automatic Financial Flow
+
+Customer Action
+
+↓
+
+Database Function
+
+↓
+
+Validation
+
+↓
+
+Trigger
+
+↓
+
+Financial Update
+
+↓
+
+Notification
+
+↓
+
+Audit Log
+
+↓
+
+Response
+
+---
+
+# Deposit Approval Trigger
+
+Activated After
+
+Deposit approval.
+
+Responsibilities
+
+- Update wallet balance
+- Create wallet transaction
+- Record audit log
+- Generate notification
+
+No client-side balance update is allowed.
+
+---
+
+# Purchase Trigger
+
+Activated After
+
+Successful purchase execution.
+
+Responsibilities
+
+- Allocate purchased card
+- Update purchase status
+- Create transaction
+- Update related records
+- Notify customer
+
+All steps execute inside the database transaction.
+
+---
+
+# Wallet Trigger
+
+Activated After
+
+Approved financial modification.
+
+Responsibilities
+
+- Synchronize wallet state
+- Maintain transaction history
+- Preserve financial consistency
+
+Wallet updates never bypass database automation.
+
+---
+
+# Notification Trigger
+
+Activated After
+
+Successful financial events.
+
+Supported Events
+
+- Deposit Approved
+- Deposit Rejected
+- Purchase Completed
+- Administrative Adjustment
+
+Notification generation is automatic.
+
+---
+
+# Audit Trigger
+
+Activated After
+
+Every administrative financial action.
+
+Responsibilities
+
+- Record operator
+- Record operation
+- Record timestamp
+- Preserve history
+
+Audit records are immutable.
+
+---
+
+# Data Integrity
+
+Triggers ensure
+
+- No duplicate financial records
+- No orphan purchases
+- No orphan transactions
+- No inconsistent wallet balance
+
+Database integrity has priority over application logic.
+
+---
+
+# Trigger Execution Rules
+
+Triggers execute only after successful validation.
+
+Failed validation prevents trigger execution.
+
+Partial trigger execution is prohibited.
+
+---
+
+# StarNET Customization
+
+Replace
+
+- Safa business identity
+- Safa branding
+- Safa notification text
+
+Keep
+
+- Trigger sequence
+- Trigger timing
+- Trigger responsibilities
+- Financial automation
+- Database consistency
+
+---
+
+# Migration Policy
+
+The Trigger architecture extracted from the Safa Wallet Store project will be preserved without modification.
+
+All financial automation remains inside Supabase.
+
+No automation shall be moved into React.
+
+---
+
+End of Document

@@ -1,0 +1,161 @@
+# StarNET Platform
+
+# 013 - SUPABASE STORAGE
+
+Version: 1.0
+
+Status: Extracted from Safa Wallet Store (Actual SQL)
+
+Target: StarNET
+
+---
+
+# Purpose
+
+This document defines the Supabase Storage architecture used by the StarNET platform.
+
+The implementation is migrated directly from the Safa Wallet Store project.
+
+Only business identity and uploaded business assets will change.
+
+---
+
+# Storage Architecture
+
+The platform uses Supabase Storage for user-uploaded files.
+
+Financial operations never store binary files inside database tables.
+
+Only file references are stored.
+
+---
+
+# Storage Bucket
+
+Bucket Name
+
+receipts
+
+Purpose
+
+Store customer deposit receipts.
+
+This bucket is part of the financial workflow.
+
+It must remain available.
+
+---
+
+# Supported File Types
+
+The storage bucket accepts image files only.
+
+Supported formats include
+
+- JPEG
+- PNG
+- WEBP
+- GIF
+
+Executable files and unsupported formats are rejected.
+
+---
+
+# Upload Workflow
+
+Customer
+
+↓
+
+Select Deposit
+
+↓
+
+Choose Receipt Image
+
+↓
+
+Upload Image
+
+↓
+
+Supabase Storage
+
+↓
+
+Store File Reference
+
+↓
+
+Create Deposit Request
+
+The uploaded file becomes part of the deposit request.
+
+---
+
+# File Ownership
+
+Each uploaded receipt belongs to the customer who created the deposit request.
+
+Applications must never expose unrelated customer receipts.
+
+---
+
+# Storage Security
+
+Only authenticated users may upload receipts.
+
+Anonymous uploads are prohibited.
+
+Administrative users may review receipts during deposit approval.
+
+---
+
+# Database Relationship
+
+The database stores only:
+
+- File Path
+- File URL (if generated)
+- Related Deposit Request
+
+Binary content remains inside Supabase Storage.
+
+---
+
+# Storage Rules
+
+Receipts are uploaded before financial approval.
+
+Receipt upload does not increase wallet balance.
+
+Wallet balance changes only after deposit approval.
+
+---
+
+# StarNET Customization
+
+Replace
+
+- Safa logo assets
+- Safa marketing images
+- Safa business content
+
+Keep
+
+- receipts bucket
+- Upload workflow
+- Storage permissions
+- Deposit attachment process
+
+---
+
+# Migration Policy
+
+The Storage implementation from the Safa Wallet Store project is adopted without changing its workflow.
+
+Only StarNET branding and business assets replace Safa assets.
+
+---
+
+End of Document

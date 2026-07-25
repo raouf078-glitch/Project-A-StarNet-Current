@@ -1,0 +1,277 @@
+# StarNET Platform
+
+# 010 - DATABASE POLICIES
+
+Version: 1.0
+
+Status: Extracted from Safa Wallet Store
+
+Target: StarNET
+
+---
+
+# Purpose
+
+This document defines the database security layer used by the Wallet, Store and Financial modules.
+
+The security model is migrated from the Safa Wallet Store project.
+
+Only StarNET identity replaces Safa identity.
+
+---
+
+# Security Principle
+
+The client application is never trusted.
+
+Every financial operation must be validated by Supabase.
+
+React is considered a presentation layer only.
+
+---
+
+# Row Level Security
+
+Row Level Security (RLS) must remain enabled.
+
+Every financial table is protected.
+
+No anonymous access is allowed.
+
+---
+
+# Wallet Policy
+
+Customer may
+
+- Read own wallet
+
+Customer may NOT
+
+- Read another wallet
+- Modify wallet balance
+- Delete wallet
+- Create wallet manually
+
+Wallet ownership is validated by authenticated user id.
+
+---
+
+# Wallet Transactions Policy
+
+Customer may
+
+Read only his own transactions.
+
+Customer may NOT
+
+Insert
+
+Update
+
+Delete
+
+Transactions.
+
+Only database procedures may create financial transactions.
+
+---
+
+# Deposit Requests Policy
+
+Customer may
+
+Create deposit request.
+
+Read own requests.
+
+Customer may NOT
+
+Approve request.
+
+Reject request.
+
+Delete approved requests.
+
+---
+
+# Orders Policy
+
+Customer may
+
+Read own orders.
+
+Create purchase request through Store.
+
+Customer may NOT
+
+Modify order status.
+
+Delete completed orders.
+
+---
+
+# Products Policy
+
+Public users
+
+Read active products.
+
+Customers
+
+Read active products.
+
+Administrators
+
+Full management.
+
+---
+
+# Notifications Policy
+
+Customer may
+
+Read own notifications.
+
+Mark notification as read.
+
+Customer may NOT
+
+Delete financial notifications.
+
+---
+
+# Deposit Accounts Policy
+
+Customers
+
+Read active deposit accounts.
+
+Administrators
+
+Create
+
+Update
+
+Disable
+
+Deposit accounts.
+
+---
+
+# Administration Policy
+
+Administrative financial operations require administrator privileges.
+
+Examples
+
+Approve Deposit
+
+Reject Deposit
+
+Adjust Wallet
+
+Manage Products
+
+Manage Deposit Accounts
+
+Financial reports
+
+---
+
+# Storage Policy
+
+Supabase Storage is used only for
+
+Deposit receipts.
+
+Customers
+
+Upload own receipt.
+
+Read own receipt.
+
+Administrators
+
+Read all receipts.
+
+Delete invalid receipts when required.
+
+---
+
+# RPC Policy
+
+Financial RPC functions bypass client permissions.
+
+RPC validates
+
+- Authentication
+- Ownership
+- Financial rules
+
+No client-side financial modification is permitted.
+
+---
+
+# Audit Policy
+
+Every financial modification creates
+
+Audit Record
+
+↓
+
+Wallet Transaction
+
+↓
+
+Notification
+
+Audit history must never be deleted.
+
+---
+
+# Authentication Policy
+
+Every financial operation requires authentication.
+
+Guest users cannot
+
+- Access Wallet
+- Purchase Products
+- Submit Deposits
+- View Financial Data
+
+---
+
+# StarNET Customization
+
+Replace
+
+- Safa Name
+- Safa Branding
+- Safa Deposit Accounts
+- Safa Business Information
+
+Keep
+
+- Security Policies
+- RLS Structure
+- Storage Rules
+- Financial Protection
+- RPC Security
+- Audit Rules
+
+---
+
+# Migration Policy
+
+StarNET adopts the same database security architecture used by the Safa Wallet Store project.
+
+No security behavior will be modified.
+
+Only StarNET business identity replaces Safa identity.
+
+---
+
+End of Document

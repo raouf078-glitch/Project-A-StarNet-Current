@@ -1,0 +1,271 @@
+# StarNET Platform
+
+# 007 - NOTIFICATIONS
+
+Version: 1.0
+
+Status: Extracted from Safa Wallet Store
+
+Target: StarNET
+
+---
+
+# Purpose
+
+This document defines the notification system used by the Wallet and Store modules.
+
+The notification workflow will remain identical to the original Safa implementation.
+
+Only branding and notification content will be customized for StarNET.
+
+---
+
+# Notification Responsibility
+
+The notification system informs customers about financial events.
+
+Notifications are generated automatically.
+
+The application never creates notifications manually.
+
+Notifications are generated only after successful database operations.
+
+---
+
+# Notification Sources
+
+The notification system listens to the following modules.
+
+Wallet
+
+↓
+
+Deposit Requests
+
+↓
+
+Purchases
+
+↓
+
+Orders
+
+↓
+
+Administrative Financial Actions
+
+---
+
+# Supported Notifications
+
+The following notification types will be migrated.
+
+---
+
+## Deposit Submitted
+
+Generated when
+
+Customer submits a deposit request.
+
+Purpose
+
+Inform customer that the request is pending review.
+
+---
+
+## Deposit Approved
+
+Generated when
+
+Administrator approves the deposit.
+
+Purpose
+
+Inform customer that wallet balance has increased.
+
+---
+
+## Deposit Rejected
+
+Generated when
+
+Administrator rejects the deposit.
+
+Purpose
+
+Inform customer that no balance has been added.
+
+---
+
+## Purchase Completed
+
+Generated when
+
+Purchase transaction finishes successfully.
+
+Purpose
+
+Confirm successful purchase.
+
+---
+
+## Purchase Failed
+
+Generated when
+
+Purchase validation fails.
+
+Purpose
+
+Inform customer that the operation did not complete.
+
+---
+
+## Wallet Balance Updated
+
+Generated after
+
+Approved financial operations.
+
+Examples
+
+- Deposit
+
+- Refund
+
+- Administrative Adjustment
+
+---
+
+## Order Completed
+
+Generated after
+
+Successful order creation and completion.
+
+---
+
+# Notification Lifecycle
+
+Financial Operation
+
+↓
+
+Database Procedure
+
+↓
+
+Financial Validation
+
+↓
+
+Operation Success
+
+↓
+
+Notification Record Created
+
+↓
+
+Application Refresh
+
+↓
+
+Customer Reads Notification
+
+---
+
+# Notification Data
+
+Each notification stores
+
+- Notification ID
+- Customer ID
+- Notification Type
+- Title
+- Message
+- Read Status
+- Created At
+
+---
+
+# Read Status
+
+Supported values
+
+Unread
+
+↓
+
+Read
+
+Customers can mark notifications as read.
+
+Notification history remains available.
+
+---
+
+# Notification Rules
+
+Notifications are generated only after successful operations.
+
+Failed database operations never generate notifications.
+
+Duplicate notifications are not allowed.
+
+---
+
+# Administrative Notifications
+
+Administrative actions may generate notifications.
+
+Examples
+
+- Deposit Approved
+
+- Deposit Rejected
+
+- Wallet Adjustment
+
+These follow the same workflow.
+
+---
+
+# StarNET Customization
+
+Replace
+
+- Safa Name
+
+- Safa Logo
+
+- Notification Text
+
+- Support Information
+
+Keep
+
+- Notification Logic
+
+- Trigger Points
+
+- Read Status
+
+- Database Workflow
+
+- Financial Integration
+
+---
+
+# Migration Policy
+
+Notification behavior will remain identical to the Safa implementation.
+
+Only StarNET branding and business content will replace Safa-specific data.
+
+No notification workflow changes are allowed.
+
+---
+
+End of Document

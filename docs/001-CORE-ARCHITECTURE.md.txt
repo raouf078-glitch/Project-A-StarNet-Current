@@ -1,0 +1,224 @@
+# StarNET Platform
+
+# 001 - CORE ARCHITECTURE
+
+Version: 1.0
+
+Status: Approved
+
+Source Project: Safa Wallet Store
+
+Target Project: StarNET
+
+---
+
+# Objective
+
+This document defines the core architecture that will be migrated from the Safa Wallet Store project into StarNET.
+
+The migration preserves the original business logic.
+
+Only Safa-specific branding, products, and unnecessary modules will be removed.
+
+---
+
+# Architecture
+
+The financial platform is composed of six core domains.
+
+```
+Users
+    │
+    ▼
+Wallet
+    │
+    ▼
+Wallet Transactions
+    │
+    ▼
+Orders
+    │
+    ▼
+Order Items
+    │
+    ▼
+Products
+```
+
+Everything outside this architecture is considered optional.
+
+---
+
+# Core Modules
+
+## Users
+
+Customer ownership.
+
+Authentication.
+
+Profile.
+
+Wallet ownership.
+
+Order ownership.
+
+Notification ownership.
+
+---
+
+## Wallet
+
+Financial account.
+
+Stores current wallet state.
+
+Represents customer balance.
+
+Never generates financial events.
+
+---
+
+## Wallet Transactions
+
+Single source of truth.
+
+Every financial operation creates one transaction.
+
+Examples
+
+- Deposit
+- Purchase
+- Refund
+- Reward
+- Transfer
+
+Rules
+
+- Immutable
+- Never manually edited
+- Never deleted
+- Every balance modification originates here
+
+---
+
+## Orders
+
+Represents every purchase.
+
+Contains
+
+- Customer
+- Status
+- Total
+- Payment Source
+
+Orders never update balances directly.
+
+---
+
+## Order Items
+
+Stores products belonging to an order.
+
+Contains
+
+- Product
+- Quantity
+- Unit Price
+- Total
+
+Pure relational entity.
+
+---
+
+## Products
+
+Represents items available for purchase.
+
+Examples
+
+- Internet Cards
+- Packages
+- Devices
+- Accessories
+
+Contains no financial calculations.
+
+---
+
+## Notifications
+
+Only financial notifications are included.
+
+Examples
+
+- Deposit Approved
+- Purchase Completed
+- Wallet Updated
+- Order Completed
+
+---
+
+# Financial Flow
+
+```
+Customer
+
+↓
+
+Wallet
+
+↓
+
+Transaction
+
+↓
+
+Order
+
+↓
+
+Notification
+```
+
+No component may bypass this flow.
+
+---
+
+# Components Included
+
+The following modules will be migrated from Safa without changing their internal logic.
+
+- Wallet
+- Wallet Transactions
+- Orders
+- Order Items
+- Products
+- Financial Notifications
+
+---
+
+# Components Excluded
+
+The following Safa-specific modules will not be migrated.
+
+- Safa Branding
+- Safa Products
+- Discount Coupons
+- Product Ratings
+- Multi Currency
+- External Shipping
+- External Integrations
+
+---
+
+# Migration Policy
+
+The Safa financial architecture is considered the reference implementation.
+
+StarNET will preserve the financial logic while replacing only business identity and network-specific content.
+
+---
+
+End of Document

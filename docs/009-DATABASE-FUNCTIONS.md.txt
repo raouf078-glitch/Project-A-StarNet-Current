@@ -1,0 +1,209 @@
+# StarNET Platform
+
+# 009 - DATABASE FUNCTIONS
+
+Version: 1.0
+
+Status: Extracted from Safa Wallet Store
+
+Target: StarNET
+
+---
+
+# Purpose
+
+This document defines the database procedures (Functions / RPC) extracted from the Safa Wallet Store project.
+
+The implementation strategy is to preserve the original database behavior.
+
+Only StarNET business identity and data will replace Safa business data.
+
+---
+
+# Financial Principle
+
+All financial operations are executed inside Supabase.
+
+React never performs financial calculations.
+
+Every financial request is delegated to a database function.
+
+---
+
+# Function
+
+## public.purchase_card()
+
+Purpose
+
+Executes the complete purchase workflow.
+
+Responsibilities
+
+- Validate wallet
+- Validate balance
+- Validate product/card availability
+- Create order
+- Create order items
+- Create wallet transaction
+- Deduct wallet balance
+- Allocate purchased card
+- Return purchase result
+
+This function represents the primary purchase engine.
+
+---
+
+# Function
+
+## public.approve_deposit()
+
+Purpose
+
+Approve a customer deposit request.
+
+Responsibilities
+
+- Validate deposit request
+- Validate administrator action
+- Increase wallet balance
+- Create wallet transaction
+- Update deposit status
+- Generate notification
+
+Wallet balance is never updated outside this function.
+
+---
+
+# Function
+
+## admin_add_wallet_balance()
+
+Purpose
+
+Administrative wallet adjustment.
+
+Responsibilities
+
+- Validate administrator
+- Validate amount
+- Update wallet balance
+- Create financial transaction
+- Create audit record
+
+Used only for authorized administrative operations.
+
+---
+
+# Function
+
+## public.mark_card_delivered()
+
+Purpose
+
+Finalize purchased card delivery.
+
+Responsibilities
+
+- Mark card as delivered
+- Prevent duplicate delivery
+- Update purchase status
+
+This function executes after a successful purchase.
+
+---
+
+# Function
+
+## public.set_account_frozen()
+
+Purpose
+
+Freeze or unfreeze customer account.
+
+Responsibilities
+
+- Change account status
+- Prevent financial operations while frozen
+
+Wallet data remains unchanged.
+
+Only account status changes.
+
+---
+
+# Transaction Rules
+
+Every financial function must execute as one database transaction.
+
+If any step fails
+
+↓
+
+Everything is rolled back.
+
+Partial execution is not allowed.
+
+---
+
+# Security
+
+Database functions execute with database permissions.
+
+Client applications
+
+cannot
+
+- edit wallet balance
+- insert financial transactions
+- approve deposits
+- bypass financial procedures
+
+All financial operations must go through the database functions.
+
+---
+
+# React Responsibilities
+
+React only
+
+- Sends request
+- Displays result
+- Refreshes UI
+
+React never performs financial calculations.
+
+---
+
+# StarNET Customization
+
+Replace
+
+- Safa branding
+- Safa business information
+- Safa deposit accounts
+- Safa products
+- Safa package names
+
+Keep
+
+- Function names
+- Financial workflow
+- Validation logic
+- Transaction logic
+- Purchase logic
+- Deposit logic
+
+---
+
+# Migration Policy
+
+The database functions extracted from the Safa Wallet Store project become the financial core of StarNET.
+
+Business identity changes only.
+
+Database behavior remains unchanged.
+
+---
+
+End of Document

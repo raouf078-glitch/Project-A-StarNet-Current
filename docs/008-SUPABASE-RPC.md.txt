@@ -1,0 +1,246 @@
+# StarNET Platform
+
+# 008 - SUPABASE RPC
+
+Version: 1.0
+
+Status: Extracted from Safa Wallet Store
+
+Target: StarNET
+
+---
+
+# Purpose
+
+This document defines the Supabase RPC layer used by the Wallet and Store.
+
+StarNET will preserve the same RPC architecture used by the Safa Wallet Store project.
+
+Only business data and branding will change.
+
+---
+
+# RPC Responsibility
+
+React never performs financial operations.
+
+React only sends requests.
+
+Supabase executes all financial operations.
+
+RPC functions are the only allowed way to:
+
+- Modify wallet balance
+- Complete purchases
+- Approve deposits
+- Create financial transactions
+- Create financial audit records
+
+---
+
+# RPC Modules
+
+The financial layer is divided into the following groups.
+
+Wallet RPC
+
+↓
+
+Deposit RPC
+
+↓
+
+Purchase RPC
+
+↓
+
+Admin Financial RPC
+
+↓
+
+Notification RPC
+
+---
+
+# Wallet RPC
+
+Responsible for
+
+- Read Wallet
+- Read Balance
+- Validate Wallet
+- Validate Status
+
+Wallet RPC never creates purchases.
+
+Wallet RPC never approves deposits.
+
+---
+
+# Deposit RPC
+
+Responsible for
+
+Deposit Approval
+
+↓
+
+Wallet Update
+
+↓
+
+Transaction Creation
+
+↓
+
+Audit Record
+
+↓
+
+Notification
+
+Deposit approval is executed completely inside the database.
+
+---
+
+# Purchase RPC
+
+Responsible for
+
+Product Validation
+
+↓
+
+Wallet Validation
+
+↓
+
+Balance Deduction
+
+↓
+
+Order Creation
+
+↓
+
+Order Items
+
+↓
+
+Wallet Transaction
+
+↓
+
+Notification
+
+The application only receives the final result.
+
+---
+
+# Admin Financial RPC
+
+Administrative procedures are responsible for
+
+- Manual Balance Adjustment
+- Deposit Approval
+- Deposit Rejection
+- Refund Operations
+
+Every operation creates
+
+- Financial Transaction
+- Audit Record
+
+---
+
+# Notification RPC
+
+Notifications are generated after successful financial procedures.
+
+Notifications are never created before the financial transaction succeeds.
+
+---
+
+# Transaction Policy
+
+Every RPC must execute inside one database transaction.
+
+If any operation fails
+
+Everything must rollback.
+
+Partial execution is prohibited.
+
+---
+
+# Security Policy
+
+RPC functions execute using database permissions.
+
+Client applications cannot bypass RPC.
+
+Client applications cannot update financial tables directly.
+
+---
+
+# Validation Policy
+
+Every RPC validates
+
+- Authenticated User
+- Wallet Ownership
+- Product Availability
+- Wallet Balance
+- Request Status
+
+Invalid requests are rejected before any financial modification.
+
+---
+
+# Error Handling
+
+RPC returns
+
+Success
+
+or
+
+Failure
+
+The application displays the result.
+
+No financial calculations occur inside React.
+
+---
+
+# StarNET Customization
+
+Replace
+
+- Safa branding
+- Safa products
+- Safa deposit accounts
+- Safa business names
+
+Keep
+
+- RPC Architecture
+- Financial Procedures
+- Transaction Logic
+- Deposit Logic
+- Purchase Logic
+- Wallet Logic
+
+---
+
+# Migration Policy
+
+StarNET adopts the original Supabase RPC architecture from the Safa Wallet Store project.
+
+Business identity changes only.
+
+Financial procedures remain unchanged.
+
+---
+
+End of Document

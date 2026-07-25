@@ -1,0 +1,290 @@
+# StarNET Platform
+
+# 012 - SUPABASE SCHEMA
+
+Version: 1.0
+
+Status: Extracted from Safa Wallet Store (Actual SQL)
+
+Target: StarNET
+
+---
+
+# Purpose
+
+This document defines the actual Supabase database schema extracted from the Safa Wallet Store SQL migrations.
+
+The schema will be migrated without redesign.
+
+Only StarNET branding and business data will replace Safa-specific data.
+
+---
+
+# Core Tables
+
+The following tables form the financial core of the system.
+
+---
+
+## profiles
+
+Purpose
+
+Customer and administrator profiles.
+
+Main Responsibilities
+
+- Authentication reference
+- Mobile number
+- Wallet balance
+- Membership information
+- Customer status
+- Welcome gift status
+
+This table is the primary customer entity.
+
+---
+
+## card_categories
+
+Purpose
+
+Store all internet packages and card definitions.
+
+Contains
+
+- Package Name
+- Selling Price
+- Wholesale Price
+- Duration
+- Speed
+- Data Limit
+- Active Status
+- Stock Alert Threshold
+
+For StarNET
+
+Only package data changes.
+
+Structure remains unchanged.
+
+---
+
+## cards
+
+Purpose
+
+Inventory of prepaid internet cards.
+
+Each card contains
+
+- Card Number
+- Secret Code
+- Category
+- Status
+- Owner
+- Purchase Reference
+
+Card status is managed only by database procedures.
+
+Duplicate sale is prohibited.
+
+---
+
+## deposit_accounts
+
+Purpose
+
+Available payment accounts.
+
+Contains
+
+- Account Name
+- Bank / Wallet
+- Account Number
+- QR Code
+- Status
+
+StarNET replaces all Safa account information.
+
+Table structure remains identical.
+
+---
+
+## deposit_requests
+
+Purpose
+
+Customer deposit requests.
+
+Contains
+
+- Customer
+- Deposit Account
+- Amount
+- Receipt
+- Status
+- Review Information
+
+Approval changes wallet balance.
+
+Submission alone does not.
+
+---
+
+## purchases
+
+Purpose
+
+Purchase history.
+
+Contains
+
+- Customer
+- Product
+- Amount
+- Purchase Date
+- Purchase Status
+
+Created automatically by database procedures.
+
+---
+
+## wallet_transactions
+
+Purpose
+
+Financial ledger.
+
+Contains every wallet movement.
+
+Examples
+
+- Deposit
+
+- Purchase
+
+- Refund
+
+- Adjustment
+
+No balance modification is valid without a transaction record.
+
+---
+
+## operation_logs
+
+Purpose
+
+Administrative audit trail.
+
+Records
+
+- Administrator
+- Operation Type
+- Amount
+- Description
+- Timestamp
+
+Audit records must never be deleted.
+
+---
+
+## notifications
+
+Purpose
+
+Financial notifications.
+
+Generated automatically after successful operations.
+
+---
+
+## app_content
+
+Purpose
+
+Dynamic application content.
+
+Examples
+
+- Links
+- Announcements
+- Live Stream
+- Rest Area
+
+Business content only.
+
+No financial logic.
+
+---
+
+## coverage_areas
+
+Stores network coverage locations.
+
+---
+
+## points_of_sale
+
+Stores StarNET agents and sales locations.
+
+Only business data changes.
+
+---
+
+## offers
+
+Stores promotional offers.
+
+---
+
+## tools
+
+Stores customer utility tools.
+
+---
+
+# Database Design Principles
+
+Financial tables are isolated from presentation tables.
+
+Wallet logic is separated from content management.
+
+Administrative logs are separated from customer transactions.
+
+Financial operations are fully auditable.
+
+---
+
+# Migration Rules
+
+Do NOT rename database tables.
+
+Do NOT redesign relationships.
+
+Do NOT merge tables.
+
+Do NOT remove constraints.
+
+Only replace:
+
+- Safa branding
+- Safa business data
+- Deposit accounts
+- Products
+- Packages
+
+---
+
+# StarNET Policy
+
+The database schema used by StarNET is the original schema extracted from the Safa Wallet Store project.
+
+Business identity changes only.
+
+No structural modifications are permitted before production testing.
+
+---
+
+End of Document

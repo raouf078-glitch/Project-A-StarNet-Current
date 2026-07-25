@@ -1,0 +1,230 @@
+# StarNET Platform
+
+# 002 - WALLET CORE
+
+Version: 1.0
+
+Status: Extracted from Safa Wallet Store
+
+Source:
+- DepositModal.tsx
+- PurchaseCardModal.tsx
+- 010_wallet_rpc_and_content_url.sql
+- Wallet financial modules
+
+---
+
+# Purpose
+
+This document defines the wallet business logic extracted from the Safa Wallet Store project.
+
+This logic will be migrated without changing its internal behavior.
+
+Only StarNET branding and network-specific content will replace Safa branding.
+
+---
+
+# Wallet Responsibility
+
+The wallet is the customer's financial account.
+
+It is responsible for:
+
+- Current Balance
+- Financial Operations
+- Deposit Requests
+- Purchase Payments
+- Transaction History
+
+The wallet itself never performs business operations.
+
+Business operations are performed through Services and Database RPC functions.
+
+---
+
+# Wallet Balance
+
+Balance belongs to the authenticated customer.
+
+Balance is stored in the database.
+
+The application reads the balance.
+
+The application does NOT calculate the balance locally.
+
+---
+
+# Deposit Flow
+
+Customer selects:
+
+- Deposit Account
+- Amount
+- Receipt Image (optional)
+
+↓
+
+Application uploads receipt image to Supabase Storage.
+
+↓
+
+Application creates a new record inside:
+
+deposit_requests
+
+Status
+
+pending
+
+↓
+
+Administrator reviews request.
+
+↓
+
+If approved:
+
+Wallet balance increases.
+
+↓
+
+Transaction is recorded.
+
+↓
+
+Customer receives notification.
+
+---
+
+# Purchase Flow
+
+Customer selects product.
+
+↓
+
+Application checks current balance.
+
+↓
+
+Application calls RPC:
+
+purchase_card()
+
+↓
+
+Database validates:
+
+- Wallet balance
+- Product availability
+- Quantity
+
+↓
+
+If successful
+
+Database
+
+- deducts balance
+- creates transaction
+- creates order
+- allocates card(s)
+
+↓
+
+Application receives purchased cards.
+
+---
+
+# Wallet Transactions
+
+Every financial action creates one transaction.
+
+Supported transaction types include:
+
+- Deposit
+- Purchase
+- Refund
+- Admin Adjustment
+
+Each transaction stores:
+
+- User
+- Type
+- Amount
+- Balance Before
+- Balance After
+- Description
+- Operator
+- Timestamp
+
+Transactions represent the financial history.
+
+---
+
+# Administrative Balance Operations
+
+Administrative balance changes are executed through database RPC.
+
+Example:
+
+admin_add_wallet_balance()
+
+Responsibilities
+
+- Validate amount
+- Validate reason
+- Read current balance
+- Update wallet balance
+- Insert operation log
+- Insert wallet transaction
+- Return new balance
+
+Application never performs these calculations locally.
+
+---
+
+# Wallet Security Rules
+
+Wallet balance cannot be modified directly from the client.
+
+All balance modifications must pass through database procedures.
+
+Every successful modification generates:
+
+- Operation Log
+- Wallet Transaction
+
+This guarantees financial traceability.
+
+---
+
+# Supabase Responsibilities
+
+Supabase is responsible for:
+
+- Balance storage
+- Transaction recording
+- Deposit requests
+- Wallet RPC
+- Operation logs
+
+React is responsible only for displaying information and sending requests.
+
+---
+
+# Migration Policy
+
+The following wallet behavior will remain identical to the Safa implementation:
+
+- Deposit workflow
+- Purchase workflow
+- Balance updates
+- Transaction recording
+- Administrative adjustments
+- Database-driven financial logic
+
+Only branding, products, and StarNET-specific configuration will change.
+
+---
+
+End of Document

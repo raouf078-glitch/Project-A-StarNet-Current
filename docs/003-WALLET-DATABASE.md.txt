@@ -1,0 +1,247 @@
+# StarNET Platform
+
+# 003 - WALLET DATABASE
+
+Version: 1.0
+
+Status: Extracted from Safa Wallet Store
+
+Target: StarNET
+
+---
+
+# Purpose
+
+This document defines the database layer required for the StarNET Wallet.
+
+The database architecture follows the original Safa Wallet implementation.
+
+Only business identity and account data will change.
+
+---
+
+# Wallet Tables
+
+The following financial tables will be migrated without changing their behavior.
+
+---
+
+## wallet_accounts
+
+Stores one wallet per customer.
+
+Responsibilities
+
+- Wallet Owner
+- Current Balance
+- Wallet Status
+- Creation Date
+- Last Update
+
+There is exactly one wallet per user.
+
+---
+
+## wallet_transactions
+
+Stores every financial operation.
+
+Supported transaction types
+
+- Deposit
+- Purchase
+- Refund
+- Adjustment
+
+Every balance modification must generate one transaction.
+
+Transactions are immutable.
+
+---
+
+## deposit_accounts
+
+Stores available deposit destinations.
+
+Examples
+
+- Bank Account
+- Mobile Wallet
+- Cash Agent
+
+For StarNET
+
+All Safa deposit accounts will be removed.
+
+Only StarNET deposit accounts will exist.
+
+No structural changes are required.
+
+Only data replacement.
+
+---
+
+## deposit_requests
+
+Stores customer deposit requests.
+
+Fields include
+
+- Customer
+- Deposit Account
+- Amount
+- Receipt Image
+- Status
+- Notes
+- Created At
+
+Possible Status
+
+- pending
+- approved
+- rejected
+
+---
+
+## products
+
+Stores products available for purchase.
+
+For StarNET
+
+Products become
+
+- Internet Cards
+- Packages
+- Devices
+- Accessories
+
+No schema changes required.
+
+---
+
+## orders
+
+Represents completed purchase requests.
+
+Contains
+
+- Customer
+- Wallet
+- Total
+- Status
+- Payment Method
+
+Orders remain unchanged.
+
+---
+
+## order_items
+
+Stores products inside each order.
+
+Pure relational table.
+
+No business logic.
+
+---
+
+## notifications
+
+Stores financial notifications.
+
+Migrated without changing behavior.
+
+Notification content will be rebranded to StarNET.
+
+---
+
+# Storage
+
+Supabase Storage stores:
+
+- Deposit Receipts
+
+Folder names may be renamed to StarNET.
+
+No workflow changes.
+
+---
+
+# Relationships
+
+User
+
+↓
+
+Wallet
+
+↓
+
+Transactions
+
+↓
+
+Orders
+
+↓
+
+Notifications
+
+Deposit Requests are linked to Wallet.
+
+Orders are linked to Wallet.
+
+Transactions are linked to Wallet.
+
+---
+
+# Database Rules
+
+Wallet balance cannot be edited manually.
+
+Wallet balance is modified only through approved financial procedures.
+
+Every balance modification must create:
+
+- Wallet Transaction
+- Audit Record
+
+---
+
+# StarNET Customization
+
+The following data will be replaced.
+
+Replace
+
+- Safa Name
+- Safa Logo
+- Safa Deposit Accounts
+- Safa Products
+- Safa Packages
+
+Keep
+
+- Database Structure
+- Wallet Logic
+- Deposit Workflow
+- Purchase Workflow
+- Notification Workflow
+- Financial Relationships
+
+---
+
+# Migration Policy
+
+No redesign.
+
+No schema rewrite.
+
+No business logic changes.
+
+Only replace Safa-specific business data with StarNET business data.
+
+---
+
+End of Document

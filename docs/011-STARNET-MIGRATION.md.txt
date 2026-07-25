@@ -1,0 +1,358 @@
+# StarNET Platform
+
+# 011 - STARNET MIGRATION
+
+Version: 1.0
+
+Status: Migration Blueprint
+
+Source: Safa Wallet Store
+
+Target: StarNET
+
+---
+
+# Purpose
+
+This document defines the migration strategy for transferring the financial system from Safa Wallet Store into StarNET.
+
+The migration preserves the original financial architecture while replacing Safa-specific business identity with StarNET.
+
+No financial business logic shall be rewritten.
+
+---
+
+# Migration Goal
+
+Transfer the following modules without modifying their internal behavior.
+
+- Wallet
+- Wallet Transactions
+- Deposit System
+- Store
+- Purchase Engine
+- Notifications
+- Database Functions
+- RPC
+- Security Policies
+
+Only business identity changes.
+
+---
+
+# Migration Order
+
+Migration must be executed in the following order.
+
+Phase 1
+
+Supabase Project
+
+↓
+
+Phase 2
+
+Database Schema
+
+↓
+
+Phase 3
+
+RLS Policies
+
+↓
+
+Phase 4
+
+Storage
+
+↓
+
+Phase 5
+
+RPC Functions
+
+↓
+
+Phase 6
+
+Wallet
+
+↓
+
+Phase 7
+
+Deposit System
+
+↓
+
+Phase 8
+
+Store
+
+↓
+
+Phase 9
+
+Purchase Flow
+
+↓
+
+Phase 10
+
+Notifications
+
+↓
+
+Phase 11
+
+Testing
+
+---
+
+# Identity Replacement
+
+Replace
+
+Safa
+
+↓
+
+StarNET
+
+Replace
+
+Safa Logo
+
+↓
+
+StarNET Logo
+
+Replace
+
+Safa Deposit Accounts
+
+↓
+
+StarNET Deposit Accounts
+
+Replace
+
+Safa Products
+
+↓
+
+StarNET Products
+
+Replace
+
+Safa Packages
+
+↓
+
+StarNET Packages
+
+No additional modifications.
+
+---
+
+# Database Migration
+
+The database schema must be migrated first.
+
+No React code should be connected before database validation completes.
+
+---
+
+# Storage Migration
+
+Supabase Storage will be used for
+
+- Deposit Receipts
+
+Bucket names may change.
+
+Workflow remains unchanged.
+
+---
+
+# Wallet Migration
+
+Wallet behavior remains identical.
+
+Only replace
+
+- Branding
+- Products
+- Deposit Accounts
+
+Wallet calculations remain unchanged.
+
+---
+
+# Deposit Migration
+
+Deposit workflow remains identical.
+
+Only replace
+
+- Account Numbers
+- Bank Information
+- Wallet Numbers
+- Contact Details
+
+Approval workflow remains unchanged.
+
+---
+
+# Store Migration
+
+Store logic remains unchanged.
+
+Only replace
+
+- Products
+- Categories
+- Images
+
+Purchase workflow remains identical.
+
+---
+
+# Purchase Engine
+
+Purchase validation remains identical.
+
+Database procedures remain identical.
+
+Financial transaction sequence remains identical.
+
+---
+
+# Notification Migration
+
+Notification triggers remain unchanged.
+
+Notification messages are rewritten using StarNET identity.
+
+Trigger logic remains identical.
+
+---
+
+# Authentication
+
+Authentication continues to control
+
+- Wallet
+- Store
+- Deposits
+- Orders
+
+Guest users remain blocked.
+
+---
+
+# Security
+
+No security rules are removed.
+
+No RLS policies are weakened.
+
+No financial permissions are granted to the client.
+
+---
+
+# Testing Strategy
+
+Migration testing order.
+
+1.
+
+Authentication
+
+↓
+
+2.
+
+Wallet
+
+↓
+
+3.
+
+Deposit
+
+↓
+
+4.
+
+Approval
+
+↓
+
+5.
+
+Store
+
+↓
+
+6.
+
+Purchase
+
+↓
+
+7.
+
+Notifications
+
+↓
+
+8.
+
+Reports
+
+Only after every step passes may the next step begin.
+
+---
+
+# Prohibited Changes
+
+During migration the following actions are prohibited.
+
+- Database redesign
+- Wallet redesign
+- Purchase redesign
+- Deposit redesign
+- Notification redesign
+- Financial workflow modifications
+- RPC modifications
+
+---
+
+# Allowed Changes
+
+Only
+
+- Branding
+- Images
+- Logos
+- Products
+- Deposit Accounts
+- Business Information
+
+---
+
+# Migration Policy
+
+StarNET adopts the Safa Wallet Store financial platform as the reference implementation.
+
+Migration focuses on preserving functionality.
+
+Business identity changes only.
+
+Feature improvements are postponed until after successful production testing.
+
+---
+
+End of Document

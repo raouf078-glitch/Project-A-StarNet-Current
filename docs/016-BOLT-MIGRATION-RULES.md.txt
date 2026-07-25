@@ -1,0 +1,382 @@
+# StarNET Platform
+
+# 016 - BOLT MIGRATION RULES
+
+Version: 1.0
+
+Status: Architecture Lock
+
+Target: Bolt AI
+
+Project: StarNET
+
+---
+
+# Purpose
+
+This document defines the mandatory implementation rules that Bolt AI must follow during the migration process.
+
+Bolt is an implementation engine.
+
+Bolt is NOT allowed to redesign the application.
+
+Bolt is NOT allowed to replace business logic.
+
+Bolt is NOT allowed to optimize financial code.
+
+Bolt must implement only.
+
+---
+
+# Project Layers
+
+Layer 1
+
+Financial Core
+
+Status
+
+LOCKED
+
+Modification
+
+NOT ALLOWED
+
+---
+
+Layer 2
+
+Integration Layer
+
+Status
+
+Editable
+
+Modification
+
+ALLOWED
+
+---
+
+Layer 3
+
+Presentation Layer
+
+Status
+
+Editable
+
+Modification
+
+ALLOWED
+
+---
+
+# Layer 1
+
+Financial Core
+
+Contains
+
+- Database
+- Wallet
+- Wallet Transactions
+- Deposits
+- Purchases
+- Orders
+- Notifications
+- SQL
+- RPC
+- Triggers
+- RLS
+- Audit
+
+Bolt MUST NOT
+
+Rename
+
+Rewrite
+
+Optimize
+
+Merge
+
+Split
+
+Refactor
+
+Any financial logic.
+
+---
+
+# Layer 2
+
+Integration Layer
+
+Bolt MAY
+
+Create Services
+
+Create Hooks
+
+Connect React to RPC
+
+Handle Loading
+
+Handle Errors
+
+Handle Success States
+
+Bolt MUST NOT
+
+Move business logic into React.
+
+---
+
+# Layer 3
+
+Presentation Layer
+
+Bolt MAY
+
+Replace Logo
+
+Replace Colors
+
+Replace Branding
+
+Replace Images
+
+Replace Icons
+
+Improve Layout
+
+Improve Responsive Design
+
+Improve Accessibility
+
+Improve Animations
+
+All UI customization is allowed.
+
+---
+
+# Mandatory Migration Rules
+
+Rule 01
+
+Never redesign the Financial Core.
+
+---
+
+Rule 02
+
+Never move SQL logic into React.
+
+---
+
+Rule 03
+
+Never calculate wallet balance inside React.
+
+---
+
+Rule 04
+
+Never modify RPC behavior.
+
+---
+
+Rule 05
+
+Never replace database triggers.
+
+---
+
+Rule 06
+
+Never bypass RLS.
+
+---
+
+Rule 07
+
+Never modify audit workflow.
+
+---
+
+Rule 08
+
+Never rewrite purchase workflow.
+
+---
+
+Rule 09
+
+Never redesign deposit workflow.
+
+---
+
+Rule 10
+
+Never rename database tables.
+
+---
+
+# Allowed Replacements
+
+Replace
+
+Safa
+
+↓
+
+StarNET
+
+Replace
+
+Safa Logo
+
+↓
+
+StarNET Logo
+
+Replace
+
+Deposit Accounts
+
+↓
+
+StarNET Deposit Accounts
+
+Replace
+
+Products
+
+↓
+
+StarNET Products
+
+Replace
+
+Packages
+
+↓
+
+StarNET Packages
+
+Replace
+
+Support Information
+
+↓
+
+StarNET Support Information
+
+Only.
+
+---
+
+# Migration Sequence
+
+Step 01
+
+Database
+
+↓
+
+Step 02
+
+Storage
+
+↓
+
+Step 03
+
+Policies
+
+↓
+
+Step 04
+
+RPC
+
+↓
+
+Step 05
+
+Wallet
+
+↓
+
+Step 06
+
+Deposits
+
+↓
+
+Step 07
+
+Store
+
+↓
+
+Step 08
+
+Notifications
+
+↓
+
+Step 09
+
+Presentation Layer
+
+↓
+
+Step 10
+
+Testing
+
+---
+
+# Testing Rule
+
+No feature may be redesigned before it works exactly like the original Safa implementation.
+
+---
+
+# Optimization Rule
+
+Optimization begins only after
+
+Customer testing is completed.
+
+Financial testing is completed.
+
+Wallet testing is completed.
+
+Store testing is completed.
+
+Deposit testing is completed.
+
+Only then may new improvements begin.
+
+---
+
+# Final Rule
+
+If there is a conflict between
+
+Bolt recommendation
+
+and
+
+Original Safa implementation
+
+The original Safa implementation wins.
+
+Until Version 1.0 of StarNET is fully operational.
+
+---
+
+End of Document
