@@ -14,11 +14,10 @@ import {
 } from '../netConfig'
 import { getTheme, toggleTheme } from '../theme'
 import HeroSlider from '../components/HeroSlider'
+import StarNetHero from '../components/StarNetHero'
 import AssistantFab from '../components/AssistantFab'
 import CameraGuide from '../components/CameraGuide'
 import { processImageBarcode, processImageOcr } from '../lib/barcode'
-
-const HEADER_BANNER = 'https://api.whacka.app/storage/v1/object/public/app-images/platform/chat/image/ae3a569e-c919-49ab-a00b-310b831991e6/62a40b30-c1d1-4933-b1bf-7367ce916b15.png'
 
 export default function Home() {
   const navigate = useNavigate()
@@ -85,24 +84,8 @@ export default function Home() {
 
   return (
     <div className="min-h-full bg-[rgb(var(--color-bg))]">
-      {/* Full-width hero header banner */}
-      <div className="w-full page-hero pt-[env(safe-area-inset-top,0px)] shadow-lg relative overflow-hidden">
-        <div className="absolute -top-8 left-1/4 w-32 h-32 rounded-full bg-white/10 blur-2xl pointer-events-none animate-glow" />
-        <div className="absolute -bottom-10 right-1/4 w-40 h-40 rounded-full bg-sky-300/10 blur-3xl pointer-events-none" />
-        <div className="relative w-full overflow-hidden" style={{ paddingTop: '50%' }}>
-          <img
-            src={HEADER_BANNER}
-            alt="ستار نت"
-            loading="eager"
-            decoding="async"
-            fetchpriority="high"
-            className="absolute inset-0 w-full h-full object-cover object-top"
-            style={{ objectPosition: 'center top' }}
-          />
-          {/* غطاء سفلي لإخفاء كلمة v2 ودمج البانر مع الخلفية */}
-          <div className="absolute bottom-0 left-0 right-0 h-[14%] bg-gradient-to-t from-blue-700 to-transparent" />
-        </div>
-      </div>
+      {/* StarNet Hotspot original header */}
+      <StarNetHero />
 
       {/* Announcements ticker */}
       {activeAnnouncements.length > 0 && (
