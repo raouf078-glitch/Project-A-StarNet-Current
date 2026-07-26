@@ -1,5 +1,5 @@
 import { supabase } from './supabase'
-import { getUserId } from './wallet'
+import { getAuthUid } from './wallet'
 
 const CART_KEY = 'starnet_cart'
 
@@ -59,7 +59,6 @@ export function getCartCount(cart) {
   return cart.reduce((sum, i) => sum + i.quantity, 0)
 }
 
-// Fetch active products, ordered by display/creation
 export async function getProducts() {
   const { data, error } = await supabase
     .from('products')
@@ -93,7 +92,6 @@ export async function getCategories() {
   return data || []
 }
 
-// Available stock = count of unused inventory items for a card
 export async function getCardStock(cardId) {
   const { count, error } = await supabase
     .from('card_inventory')
@@ -105,40 +103,31 @@ export async function getCardStock(cardId) {
   return count || 0
 }
 
-// Atomic purchase via RPC — wallet balance payment
 export async function purchaseCardWithWallet(cardId) {
-  const userId = getUserId()
   const { data, error } = await supabase.rpc('purchase_card_v2', {
     p_card_id: cardId,
-    p_user_id: userId,
   })
-
   if (error) throw error
   return data
 }
 
-// Atomic purchase via RPC — gems payment
 export async function purchaseCardWithGems(cardId) {
-  const userId = getUserId()
   const { data, error } = await supabase.rpc('purchase_card_with_gems', {
     p_card_id: cardId,
-    p_user_id: userId,
   })
-
   if (error) throw error
   return data
 }
 
-// Purchase history — card sales with product details
 export async function getCardSales() {
-  const userId = getUserId()
+  const uid = await getAuthUid()
   const { data, error } = await supabase
     .from('card_sales')
     .select(`
       *,
       card:products(id, title, description, image_url)
     `)
-    .eq('user_id', userId)
+    .eq('uid', uid)
     .order('created_at', { ascending: false })
 
   if (error) throw error
@@ -159,12 +148,13 @@ export async function getSaleDetails(saleId) {
   return data
 }
 
-// Legacy order creation (kept for backward compat with Checkout page)
 export async function createOrder({ items, total, paymentMethod, pointsUsed = 0 }) {
+  const uid = await getAuthUid()
   const orderNumber = 'SN-' + Date.now().toString(36).toUpperCase()
   const { data, error } = await supabase
     .from('orders')
     .insert({
+      uid,
       order_number: orderNumber,
       items: JSON.stringify(items),
       subtotal: total,
@@ -181,9 +171,11 @@ export async function createOrder({ items, total, paymentMethod, pointsUsed = 0 
 }
 
 export async function getOrders() {
+  const uid = await getAuthUid()
   const { data, error } = await supabase
     .from('orders')
     .select('*')
+    .eq('uid', uid)
     .order('created_at', { ascending: false })
 
   if (error) throw error

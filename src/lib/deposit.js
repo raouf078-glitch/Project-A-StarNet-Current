@@ -1,7 +1,6 @@
 import { supabase } from './supabase'
-import { getUserId } from './wallet'
+import { getAuthUid } from './wallet'
 
-// Fetch active deposit accounts (bank/agent targets)
 export async function getDepositAccounts() {
   const { data, error } = await supabase
     .from('deposit_accounts')
@@ -13,9 +12,8 @@ export async function getDepositAccounts() {
   return data || []
 }
 
-// Upload receipt to deposit-receipts bucket
-export async function uploadReceipt(file, userId) {
-  const uid = userId || getUserId()
+export async function uploadReceipt(file) {
+  const uid = await getAuthUid()
   const ext = file.name.split('.').pop()
   const path = `${uid}/${Date.now()}.${ext}`
 
@@ -32,13 +30,12 @@ export async function uploadReceipt(file, userId) {
   return urlData.publicUrl
 }
 
-// Submit a deposit request
 export async function createDepositRequest({ accountId, amount, senderName, transferNumber, receiptUrl }) {
-  const userId = getUserId()
+  const uid = await getAuthUid()
   const { data, error } = await supabase
     .from('deposits')
     .insert({
-      user_id: userId,
+      uid,
       account_id: accountId,
       amount,
       sender_name: senderName,
@@ -53,23 +50,21 @@ export async function createDepositRequest({ accountId, amount, senderName, tran
   return data
 }
 
-// Fetch user's deposit requests
 export async function getDepositRequests() {
-  const userId = getUserId()
+  const uid = await getAuthUid()
   const { data, error } = await supabase
     .from('deposits')
     .select(`
       *,
       account:deposit_accounts(id, account_name, account_number, bank_name)
     `)
-    .eq('user_id', userId)
+    .eq('uid', uid)
     .order('created_at', { ascending: false })
 
   if (error) throw error
   return data || []
 }
 
-// Admin: fetch pending deposits
 export async function getPendingDeposits() {
   const { data, error } = await supabase
     .from('deposits')
@@ -84,14 +79,11 @@ export async function getPendingDeposits() {
   return data || []
 }
 
-// Admin: approve or reject a deposit via RPC
 export async function processDeposit(requestId, status, notes = null) {
-  const userId = getUserId()
   const { data, error } = await supabase.rpc('process_deposit_request', {
     p_request_id: requestId,
     p_status: status,
     p_notes: notes,
-    p_user_id: userId,
   })
 
   if (error) throw error

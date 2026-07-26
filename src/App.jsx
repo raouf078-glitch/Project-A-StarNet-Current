@@ -16,6 +16,7 @@ import GuidePage from './pages/Guide'
 import AssistantPage from './pages/Assistant'
 import AdminAssistantPage from './pages/AdminAssistant'
 import Splash from './components/Splash'
+import AuthGate from './components/AuthGate'
 import WalletPage from './pages/Wallet'
 import WalletHistoryPage from './pages/WalletHistory'
 import RewardsPage from './pages/Rewards'
@@ -108,10 +109,10 @@ export default function App() {
             <Route path="/offers" element={<OffersPage />} />
             <Route path="/tools" element={<ToolsPage />} />
             <Route path="/activate" element={<ActivatePage />} />
-            <Route path="/deposit" element={<DepositPage />} />
+            <Route path="/deposit" element={<AuthGate><DepositPage /></AuthGate>} />
             <Route path="/coverage" element={<CoveragePage />} />
             <Route path="/pos" element={<PointsOfSalePage />} />
-            <Route path="/my-cards" element={<MyCardsPage />} />
+            <Route path="/my-cards" element={<AuthGate><MyCardsPage /></AuthGate>} />
             <Route path="/calculator" element={<CalculatorPage />} />
             <Route path="/feedback" element={<FeedbackPage />} />
             <Route path="/guide" element={<GuidePage />} />
@@ -119,13 +120,13 @@ export default function App() {
             <Route path="/admin" element={<AdminAssistantPage />} />
             <Route path="/admin/:section" element={<AdminAssistantPage />} />
             <Route path="/settings" element={<SettingsPage />} />
-            <Route path="/wallet" element={<WalletPage />} />
-            <Route path="/wallet/history" element={<WalletHistoryPage />} />
-            <Route path="/rewards" element={<RewardsPage />} />
-            <Route path="/store" element={<StorePage />} />
-            <Route path="/cart" element={<CartPage />} />
-            <Route path="/checkout" element={<CheckoutPage />} />
-            <Route path="/purchases" element={<PurchasesPage />} />
+            <Route path="/wallet" element={<AuthGate><WalletPage /></AuthGate>} />
+            <Route path="/wallet/history" element={<AuthGate><WalletHistoryPage /></AuthGate>} />
+            <Route path="/rewards" element={<AuthGate><RewardsPage /></AuthGate>} />
+            <Route path="/store" element={<AuthGate><StorePage /></AuthGate>} />
+            <Route path="/cart" element={<AuthGate><CartPage /></AuthGate>} />
+            <Route path="/checkout" element={<AuthGate><CheckoutPage /></AuthGate>} />
+            <Route path="/purchases" element={<AuthGate><PurchasesPage /></AuthGate>} />
           </Routes>
         </main>
         <TabBar />

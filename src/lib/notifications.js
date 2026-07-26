@@ -1,12 +1,12 @@
 import { supabase } from './supabase'
-import { getUserId } from './wallet'
+import { getAuthUid } from './wallet'
 
-// Fetch user notifications (most recent first)
 export async function getNotifications(limit = 50) {
-  const userId = getUserId()
+  const uid = await getAuthUid()
   const { data, error } = await supabase
     .from('notifications')
     .select('*')
+    .eq('uid', uid)
     .order('created_at', { ascending: false })
     .limit(limit)
 
@@ -14,7 +14,6 @@ export async function getNotifications(limit = 50) {
   return data || []
 }
 
-// Mark a single notification as read
 export async function markAsRead(id) {
   const { error } = await supabase
     .from('notifications')
@@ -24,28 +23,29 @@ export async function markAsRead(id) {
   if (error) throw error
 }
 
-// Mark all unread notifications as read
 export async function markAllAsRead() {
+  const uid = await getAuthUid()
   const { error } = await supabase
     .from('notifications')
     .update({ read: true })
+    .eq('uid', uid)
     .eq('read', false)
 
   if (error) throw error
 }
 
-// Count unread notifications
 export async function getUnreadCount() {
+  const uid = await getAuthUid()
   const { count, error } = await supabase
     .from('notifications')
     .select('id', { count: 'exact', head: true })
+    .eq('uid', uid)
     .eq('read', false)
 
   if (error) throw error
   return count || 0
 }
 
-// Subscribe to realtime notification inserts for this user
 export function subscribeToNotifications(onInsert) {
   const channel = supabase
     .channel('user-notifications')
@@ -61,16 +61,13 @@ export function subscribeToNotifications(onInsert) {
   return () => supabase.removeChannel(channel)
 }
 
-// Subscribe to realtime wallet balance updates
 export function subscribeToWalletUpdates(onUpdate) {
-  const userId = getUserId()
   const channel = supabase
     .channel('wallet-changes')
     .on('postgres_changes', {
       event: 'UPDATE',
       schema: 'public',
       table: 'wallets',
-      filter: `user_id=eq.${userId}`,
     }, (payload) => {
       onUpdate(payload.new)
     })

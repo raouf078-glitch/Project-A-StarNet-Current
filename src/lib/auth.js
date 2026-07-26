@@ -1,44 +1,65 @@
-const LS_KEY = 'whacka_mock_user'
+import { supabase } from './supabase'
 
-function getUser() {
-  try {
-    const raw = localStorage.getItem(LS_KEY)
-    return raw ? JSON.parse(raw) : null
-  } catch {
-    return null
-  }
-}
+let onAuthChangeCb = null
+let currentSession = null
+let initialized = false
 
-function setUser(u) {
-  try {
-    if (u) localStorage.setItem(LS_KEY, JSON.stringify(u))
-    else localStorage.removeItem(LS_KEY)
-  } catch {}
+async function initSession() {
+  if (initialized) return
+  initialized = true
+  const { data: { session } } = await supabase.auth.getSession()
+  currentSession = session
+  if (onAuthChangeCb) onAuthChangeCb(session)
 }
 
 export const auth = {
-  getCurrentUser() {
-    return getUser()
+  async getCurrentUser() {
+    if (!currentSession) await initSession()
+    return currentSession?.user || null
   },
 
   isAppOwner() {
-    return !!getUser()
+    return !!currentSession
   },
 
-  async signIn() {
-    const u = { id: 'mock-owner', email: 'owner@starnet.local', name: 'المالك' }
-    setUser(u)
-    return u
+  async sendOtp(phone) {
+    const { error } = await supabase.auth.signInWithOtp({
+      phone,
+      options: { shouldCreateUser: true },
+    })
+    if (error) throw error
+    return true
+  },
+
+  async verifyOtp(phone, token) {
+    const { data, error } = await supabase.auth.verifyOtp({
+      phone,
+      token,
+      type: 'sms',
+    })
+    if (error) throw error
+    currentSession = data.session
+    if (onAuthChangeCb) onAuthChangeCb(data.session)
+    return data.user
   },
 
   async signOut() {
-    setUser(null)
+    await supabase.auth.signOut()
+    currentSession = null
+    if (onAuthChangeCb) onAuthChangeCb(null)
   },
 
   onAuthChange(cb) {
-    const handler = () => cb(getUser())
-    window.addEventListener('storage', handler)
-    return () => window.removeEventListener('storage', handler)
+    onAuthChangeCb = cb
+    initSession()
+    const { data } = supabase.auth.onAuthStateChange((event, session) => {
+      currentSession = session
+      cb(session)
+    })
+    return () => data.subscription.unsubscribe()
+  },
+
+  getSession() {
+    return currentSession
   },
 }
-

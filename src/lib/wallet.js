@@ -1,26 +1,27 @@
 import { supabase } from './supabase'
-import { getAnonymousId } from './user'
 
 const POINTS_PER_RIYAL = 10
-const GEMS_EXCHANGE_RATE = 0.1 // 1 gem = 0.10 riyal
+const GEMS_EXCHANGE_RATE = 0.1
 
-export function getUserId() {
-  return getAnonymousId()
+export async function getAuthUid() {
+  const { data: { session } } = await supabase.auth.getSession()
+  if (!session?.user?.id) throw new Error('يجب تسجيل الدخول أولاً')
+  return session.user.id
 }
 
 export async function getOrCreateWallet() {
-  const userId = getUserId()
+  const uid = await getAuthUid()
   const { data } = await supabase
     .from('wallets')
     .select('*')
-    .eq('user_id', userId)
+    .eq('uid', uid)
     .maybeSingle()
 
   if (data) return data
 
   const { data: created, error } = await supabase
     .from('wallets')
-    .insert({ user_id: userId })
+    .insert({ uid })
     .select()
     .maybeSingle()
 
@@ -43,7 +44,9 @@ export async function addFunds(amount, reason = 'top_up') {
     .update({ balance: newBalance, points: wallet.points + pointsEarned, updated_at: new Date().toISOString() })
     .eq('id', wallet.id)
 
+  const uid = await getAuthUid()
   await supabase.from('wallet_transactions').insert({
+    uid,
     type: 'deposit',
     title: reason,
     amount,
@@ -65,7 +68,9 @@ export async function deductFunds(amount, reason = 'purchase') {
     .update({ balance: newBalance, updated_at: new Date().toISOString() })
     .eq('id', wallet.id)
 
+  const uid = await getAuthUid()
   await supabase.from('wallet_transactions').insert({
+    uid,
     type: 'purchase',
     title: reason,
     amount: -amount,
@@ -86,7 +91,9 @@ export async function spendPoints(points, reason = 'redeem') {
     .update({ points: newPoints, updated_at: new Date().toISOString() })
     .eq('id', wallet.id)
 
+  const uid = await getAuthUid()
   await supabase.from('wallet_transactions').insert({
+    uid,
     type: 'purchase',
     title: reason,
     amount: 0,
@@ -99,9 +106,11 @@ export async function spendPoints(points, reason = 'redeem') {
 }
 
 export async function getTransactions(limit = 20) {
+  const uid = await getAuthUid()
   const { data, error } = await supabase
     .from('wallet_transactions')
     .select('*')
+    .eq('uid', uid)
     .order('created_at', { ascending: false })
     .limit(limit)
 
@@ -110,24 +119,22 @@ export async function getTransactions(limit = 20) {
 }
 
 export async function getRewardsHistory() {
+  const uid = await getAuthUid()
   const { data, error } = await supabase
     .from('rewards')
     .select('*')
+    .eq('uid', uid)
     .order('created_at', { ascending: false })
 
   if (error) throw error
   return data || []
 }
 
-// Gems exchange — converts reward points to wallet cash via RPC
 export async function exchangeGems(gemsAmount) {
-  const userId = getUserId()
   const { data, error } = await supabase.rpc('exchange_gems_for_balance', {
     p_gems_amount: gemsAmount,
     p_exchange_rate: GEMS_EXCHANGE_RATE,
-    p_user_id: userId,
   })
-
   if (error) throw error
   return data
 }
