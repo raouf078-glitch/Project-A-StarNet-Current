@@ -2,6 +2,7 @@ import { supabase } from './supabase'
 import { getAnonymousId } from './user'
 
 const POINTS_PER_RIYAL = 10
+const GEMS_EXCHANGE_RATE = 0.1 // 1 gem = 0.10 riyal
 
 export function getUserId() {
   return getAnonymousId()
@@ -118,6 +119,19 @@ export async function getRewardsHistory() {
   return data || []
 }
 
+// Gems exchange — converts reward points to wallet cash via RPC
+export async function exchangeGems(gemsAmount) {
+  const userId = getUserId()
+  const { data, error } = await supabase.rpc('exchange_gems_for_balance', {
+    p_gems_amount: gemsAmount,
+    p_exchange_rate: GEMS_EXCHANGE_RATE,
+    p_user_id: userId,
+  })
+
+  if (error) throw error
+  return data
+}
+
 export function getTier(points) {
   if (points >= 5000) return { name: 'ذهبي', color: 'text-amber-600', bg: 'bg-amber-50', next: null, progress: 100 }
   if (points >= 2000) return { name: 'فضي', color: 'text-sky-600', bg: 'bg-sky-50', next: 5000, progress: Math.round((points / 5000) * 100) }
@@ -125,4 +139,4 @@ export function getTier(points) {
   return { name: 'مبتدئ', color: 'text-gray-600', bg: 'bg-gray-50', next: 500, progress: Math.round((points / 500) * 100) }
 }
 
-export { POINTS_PER_RIYAL }
+export { POINTS_PER_RIYAL, GEMS_EXCHANGE_RATE }

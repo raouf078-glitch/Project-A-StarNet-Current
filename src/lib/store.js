@@ -1,4 +1,5 @@
 import { supabase } from './supabase'
+import { getUserId } from './wallet'
 
 const CART_KEY = 'starnet_cart'
 
@@ -58,6 +59,7 @@ export function getCartCount(cart) {
   return cart.reduce((sum, i) => sum + i.quantity, 0)
 }
 
+// Fetch active products, ordered by display/creation
 export async function getProducts() {
   const { data, error } = await supabase
     .from('products')
@@ -80,6 +82,84 @@ export async function getProduct(id) {
   return data
 }
 
+export async function getCategories() {
+  const { data, error } = await supabase
+    .from('categories')
+    .select('*')
+    .eq('is_active', true)
+    .order('display_order', { ascending: true })
+
+  if (error) throw error
+  return data || []
+}
+
+// Available stock = count of unused inventory items for a card
+export async function getCardStock(cardId) {
+  const { count, error } = await supabase
+    .from('card_inventory')
+    .select('id', { count: 'exact', head: true })
+    .eq('card_id', cardId)
+    .eq('is_used', false)
+
+  if (error) throw error
+  return count || 0
+}
+
+// Atomic purchase via RPC — wallet balance payment
+export async function purchaseCardWithWallet(cardId) {
+  const userId = getUserId()
+  const { data, error } = await supabase.rpc('purchase_card_v2', {
+    p_card_id: cardId,
+    p_user_id: userId,
+  })
+
+  if (error) throw error
+  return data
+}
+
+// Atomic purchase via RPC — gems payment
+export async function purchaseCardWithGems(cardId) {
+  const userId = getUserId()
+  const { data, error } = await supabase.rpc('purchase_card_with_gems', {
+    p_card_id: cardId,
+    p_user_id: userId,
+  })
+
+  if (error) throw error
+  return data
+}
+
+// Purchase history — card sales with product details
+export async function getCardSales() {
+  const userId = getUserId()
+  const { data, error } = await supabase
+    .from('card_sales')
+    .select(`
+      *,
+      card:products(id, title, description, image_url)
+    `)
+    .eq('user_id', userId)
+    .order('created_at', { ascending: false })
+
+  if (error) throw error
+  return data || []
+}
+
+export async function getSaleDetails(saleId) {
+  const { data, error } = await supabase
+    .from('card_sales')
+    .select(`
+      *,
+      card:products(id, title, description, image_url)
+    `)
+    .eq('id', saleId)
+    .maybeSingle()
+
+  if (error) throw error
+  return data
+}
+
+// Legacy order creation (kept for backward compat with Checkout page)
 export async function createOrder({ items, total, paymentMethod, pointsUsed = 0 }) {
   const orderNumber = 'SN-' + Date.now().toString(36).toUpperCase()
   const { data, error } = await supabase

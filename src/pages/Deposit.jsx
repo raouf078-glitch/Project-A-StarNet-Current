@@ -1,10 +1,11 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { Building2, User, Copy, Check, Phone, Camera, Star } from 'lucide-react'
+import { Building2, User, Copy, Check, Phone, Camera, Star, Upload, Loader2 } from 'lucide-react'
 import {
   LOGO_DAY, LOGO_NIGHT, DEPOSIT_NAME, DEPOSIT_ACCOUNTS, SUPPORT_PHONE, SUPPORT_WA, SOCIAL,
 } from '../netConfig'
 import PageHeader from '../components/PageHeader'
+import { getDepositAccounts, uploadReceipt, createDepositRequest } from '../lib/deposit'
 
 function WhatsAppIcon({ size = 20, className = '' }) {
   return (
@@ -41,6 +42,156 @@ function AccountCard({ acc }) {
           <p className="text-xl font-black text-gray-800 tracking-wide" dir="ltr">{acc.number}</p>
         </div>
       </div>
+    </div>
+  )
+}
+
+function DepositForm({ pkg }) {
+  const [accounts, setAccounts] = useState([])
+  const [selectedAccount, setSelectedAccount] = useState('')
+  const [amount, setAmount] = useState(pkg?.price?.toString() || '')
+  const [senderName, setSenderName] = useState('')
+  const [transferNumber, setTransferNumber] = useState('')
+  const [receiptFile, setReceiptFile] = useState(null)
+  const [receiptPreview, setReceiptPreview] = useState(null)
+  const [submitting, setSubmitting] = useState(false)
+  const [success, setSuccess] = useState(false)
+  const [error, setError] = useState('')
+
+  useEffect(() => {
+    getDepositAccounts().then(accs => {
+      setAccounts(accs)
+      if (accs.length > 0) setSelectedAccount(accs[0].id)
+    }).catch(() => {})
+  }, [])
+
+  const handleFile = (e) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setReceiptFile(file)
+    const reader = new FileReader()
+    reader.onload = () => setReceiptPreview(reader.result)
+    reader.readAsDataURL(file)
+  }
+
+  const handleSubmit = async () => {
+    if (submitting || success) return
+    setError('')
+    if (!selectedAccount) { setError('اختر حساب الإيداع'); return }
+    const amt = Number(amount)
+    if (!amt || amt <= 0) { setError('أدخل مبلغاً صحيحاً'); return }
+    if (!senderName.trim()) { setError('أدخل اسم المرسل'); return }
+    if (!transferNumber.trim()) { setError('أدخل رقم الحوالة'); return }
+    if (!receiptFile) { setError('أرفق صورة السند'); return }
+
+    setSubmitting(true)
+    try {
+      const receiptUrl = await uploadReceipt(receiptFile)
+      await createDepositRequest({
+        accountId: selectedAccount,
+        amount: amt,
+        senderName: senderName.trim(),
+        transferNumber: transferNumber.trim(),
+        receiptUrl,
+      })
+      setSuccess(true)
+    } catch (e) {
+      setError(e.message || 'تعذّر إرسال الطلب')
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
+  if (success) {
+    return (
+      <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-5 text-center">
+        <div className="w-14 h-14 rounded-full bg-emerald-100 flex items-center justify-center mx-auto mb-3">
+          <Check size={28} className="text-emerald-600" />
+        </div>
+        <p className="text-gray-800 font-bold mb-1">تم إرسال طلب الإيداع بنجاح</p>
+        <p className="text-gray-500 text-sm">سيتم مراجعة طلبك وتفعيل الرصيد بعد التأكد من التحويل.</p>
+      </div>
+    )
+  }
+
+  return (
+    <div className="bg-white rounded-2xl shadow-sm border border-blue-100 p-4 space-y-3">
+      <h3 className="text-sm font-black text-gray-800">إرسال طلب إيداع</h3>
+
+      {error && (
+        <div className="bg-red-50 border border-red-200 rounded-xl px-3 py-2">
+          <p className="text-xs text-red-600">{error}</p>
+        </div>
+      )}
+
+      <div>
+        <label className="text-xs font-bold text-gray-600 mb-1 block">حساب الإيداع</label>
+        <select
+          value={selectedAccount}
+          onChange={e => setSelectedAccount(e.target.value)}
+          className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-700 outline-none focus:border-blue-400"
+        >
+          {accounts.map(a => (
+            <option key={a.id} value={a.id}>{a.bank_name} — {a.account_number}</option>
+          ))}
+        </select>
+      </div>
+
+      <div>
+        <label className="text-xs font-bold text-gray-600 mb-1 block">المبلغ (ريال)</label>
+        <input
+          type="number"
+          value={amount}
+          onChange={e => setAmount(e.target.value)}
+          placeholder="0"
+          className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-700 outline-none focus:border-blue-400"
+        />
+      </div>
+
+      <div>
+        <label className="text-xs font-bold text-gray-600 mb-1 block">اسم المرسل</label>
+        <input
+          type="text"
+          value={senderName}
+          onChange={e => setSenderName(e.target.value)}
+          placeholder="الاسم الكامل"
+          className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-700 outline-none focus:border-blue-400"
+        />
+      </div>
+
+      <div>
+        <label className="text-xs font-bold text-gray-600 mb-1 block">رقم الحوالة</label>
+        <input
+          type="text"
+          value={transferNumber}
+          onChange={e => setTransferNumber(e.target.value)}
+          placeholder="رقم العملية"
+          className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-700 outline-none focus:border-blue-400"
+        />
+      </div>
+
+      <div>
+        <label className="text-xs font-bold text-gray-600 mb-1 block">صورة السند</label>
+        <label className="w-full flex flex-col items-center justify-center gap-2 bg-gray-50 border-2 border-dashed border-gray-200 rounded-xl py-4 cursor-pointer active:bg-gray-100 transition-colors">
+          {receiptPreview ? (
+            <img src={receiptPreview} alt="سند" className="max-h-24 rounded-lg" />
+          ) : (
+            <>
+              <Upload size={20} className="text-gray-400" />
+              <span className="text-xs text-gray-500">اضغط لاختيار صورة السند</span>
+            </>
+          )}
+          <input type="file" accept="image/*" onChange={handleFile} className="hidden" />
+        </label>
+      </div>
+
+      <button
+        onClick={handleSubmit}
+        disabled={submitting}
+        className="w-full bg-blue-600 text-white font-bold py-3 rounded-2xl flex items-center justify-center gap-2 active:scale-95 transition-transform disabled:opacity-50"
+      >
+        {submitting ? <><Loader2 size={18} className="animate-spin" /> جاري الإرسال...</> : 'إرسال الطلب'}
+      </button>
     </div>
   )
 }
@@ -127,6 +278,9 @@ export default function Deposit() {
           <Star size={20} className="text-blue-500" fill="currentColor" />
           <p className="text-blue-700 font-black">شبكة ستار نت — خيارك الأفضل</p>
         </div>
+
+        {/* Deposit request form */}
+        <DepositForm pkg={pkg} />
 
         {/* Contact buttons */}
         <a
