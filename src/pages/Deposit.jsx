@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useLocation } from 'react-router-dom'
-import { Building2, User, Phone, Camera, Star } from 'lucide-react'
+import { Building2, User, Phone, Camera, Star, Copy, Check } from 'lucide-react'
 import {
   LOGO_DAY, LOGO_NIGHT, DEPOSIT_NAME, DEPOSIT_ACCOUNTS, SUPPORT_PHONE, SUPPORT_WA, SOCIAL,
 } from '../netConfig'

@@ -45,12 +45,12 @@ export const auth = {
   },
 
   isAdmin() {
-    const email = currentSession?.user?.email || ''
+    const email = (currentSession?.user?.email || '').toLowerCase()
     return email === OWNER_EMAIL
   },
 
   isOwner() {
-    const email = currentSession?.user?.email || ''
+    const email = (currentSession?.user?.email || '').toLowerCase()
     return email === OWNER_EMAIL
   },
 
@@ -110,7 +110,7 @@ export const auth = {
 
   // Sign in with email + password (for admin/owner)
   async signInWithAdmin(email, password) {
-    if (email !== OWNER_EMAIL) throw new Error('هذا الحساب غير مصرّح كإدارة')
+    if (email.toLowerCase() !== OWNER_EMAIL) throw new Error('هذا الحساب غير مصرّح كإدارة')
     const { data, error } = await supabase.auth.signInWithPassword({ email, password })
     if (error) throw error
     currentSession = data.session
