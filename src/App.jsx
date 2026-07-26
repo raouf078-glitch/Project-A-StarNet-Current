@@ -1,5 +1,5 @@
 import { HashRouter, Routes, Route, Link, useLocation } from 'react-router-dom'
-import { Home as HomeIcon, MapPin, Wrench, Store, Settings, Wallet } from 'lucide-react'
+import { Hop as HomeIcon, MapPin, Wrench, Store, Settings, Wallet } from 'lucide-react'
 import { useRef, useEffect, useState } from 'react'
 import HomePage from './pages/Home'
 import OffersPage from './pages/Offers'
@@ -110,10 +110,10 @@ export default function App() {
             <Route path="/offers" element={<OffersPage />} />
             <Route path="/tools" element={<ToolsPage />} />
             <Route path="/activate" element={<ActivatePage />} />
-            <Route path="/deposit" element={<AuthGate><DepositPage /></AuthGate>} />
+            <Route path="/deposit" element={<DepositPage />} />
             <Route path="/coverage" element={<CoveragePage />} />
             <Route path="/pos" element={<PointsOfSalePage />} />
-            <Route path="/my-cards" element={<AuthGate><MyCardsPage /></AuthGate>} />
+            <Route path="/my-cards" element={<MyCardsPage />} />
             <Route path="/calculator" element={<CalculatorPage />} />
             <Route path="/feedback" element={<FeedbackPage />} />
             <Route path="/guide" element={<GuidePage />} />

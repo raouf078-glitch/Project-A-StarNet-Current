@@ -51,13 +51,17 @@ export function seedPackagesOnce() {
 }
 
 const SEED_PACKAGES = [
-  { id: 'pkg_200', name: 'باقة 200', description: 'باقة اقتصادية', price: 200, speed: '5 ميجا', validity: '7 أيام', quota: '5 جيجا', active: true, colorIndex: 0, sort: 0 },
-  { id: 'pkg_300', name: 'باقة 300', description: 'باقة يومية', price: 300, speed: '8 ميجا', validity: '7 أيام', quota: '10 جيجا', active: true, colorIndex: 1, sort: 1 },
-  { id: 'pkg_500', name: 'باقة 500', description: 'باقة أسبوعية', price: 500, speed: '10 ميجا', validity: '7 أيام', quota: '20 جيجا', active: true, colorIndex: 2, sort: 2 },
-  { id: 'pkg_1000', name: 'باقة 1000', description: 'باقة شهرية', price: 1000, speed: '15 ميجا', validity: '30 يوم', quota: '40 جيجا', active: true, colorIndex: 3, sort: 3 },
-  { id: 'pkg_1500', name: 'باقة 1500', description: 'باقة شهرية بلس', price: 1500, speed: '20 ميجا', validity: '30 يوم', quota: '60 جيجا', active: true, colorIndex: 4, sort: 4 },
-  { id: 'pkg_2000', name: 'باقة 2000', description: 'باقة عائلية', price: 2000, speed: '25 ميجا', validity: '30 يوم', quota: '80 جيجا', active: true, colorIndex: 5, sort: 5 },
-  { id: 'pkg_3000', name: 'باقة 3000', description: 'باقة كبيرة', price: 3000, speed: '30 ميجا', validity: '30 يوم', quota: '120 جيجا', active: true, colorIndex: 6, sort: 6 },
-  { id: 'pkg_5000', name: 'باقة 5000', description: 'باقة أعمال', price: 5000, speed: '40 ميجا', validity: '30 يوم', quota: '200 جيجا', active: true, colorIndex: 7, sort: 7 },
-  { id: 'pkg_10000', name: 'باقة 10000', description: 'الباقة الذهبية', price: 10000, speed: 'مفتوحة', validity: '30 يوم', quota: 'مفتوح', active: true, colorIndex: 8, sort: 8 },
+  { id: 'الباقة اليومية', name: 'الباقة اليومية', description: 'اتصال سريع ليوم كامل', price: 200, quota: '1 جيجابايت', speed: 'مفتوحة', active: true, validity: 'يومان', colorIndex: 0, sort: 1 },
+  { id: 'باقة 3 أيام', name: 'باقة 3 أيام', description: 'ثلاثة أيام من الاتصال', price: 300, quota: '2 جيجابايت', speed: 'مفتوحة', active: true, validity: '3 أيام', colorIndex: 1, sort: 2 },
+  { id: 'الباقة الاقتصادية', name: 'الباقة الاقتصادية', description: 'قيمة ممتازة لعشرة أيام', price: 500, quota: '4.5 جيجابايت', speed: 'مفتوحة', active: true, validity: '10 أيام', colorIndex: 2, sort: 3 },
+  { id: 'الباقة الشهرية الأساسية', name: 'الباقة الشهرية الأساسية', description: 'شهر كامل للاستخدام اليومي', price: 1000, quota: '10 جيجابايت', speed: 'مفتوحة', active: true, validity: 'شهر واحد', colorIndex: 3, sort: 4 },
+  { id: 'الباقة الشهرية المميزة', name: 'الباقة الشهرية المميزة', description: 'تحميل أكثر طوال الشهر', price: 1500, quota: '16 جيجابايت', speed: 'مفتوحة', active: true, validity: 'شهر واحد', colorIndex: 4, sort: 5 },
+  { id: 'الباقة الشهرية المتقدمة', name: 'الباقة الشهرية المتقدمة', description: 'للمستخدمين النشطين', price: 2000, quota: '22 جيجابايت', speed: 'مفتوحة', active: true, validity: 'شهر واحد', colorIndex: 5, sort: 6 },
+  { id: 'الباقة الشهرية الذهبية', name: 'الباقة الشهرية الذهبية', description: 'أعلى استخدام شهري', price: 3000, quota: '33 جيجابايت', speed: 'مفتوحة', active: true, validity: 'شهر واحد', colorIndex: 6, sort: 7 },
+  { id: 'الباقة المنزلية', name: 'الباقة المنزلية', description: 'مثالية للمنازل', price: 5000, quota: '60 جيجابايت', speed: 'مفتوحة', active: true, validity: 'شهر واحد', colorIndex: 7, sort: 8 },
+  { id: 'الباقة المنزلية بلس', name: 'الباقة المنزلية بلس', description: 'أقصى استخدام للمنزل', price: 10000, quota: '130 جيجابايت', speed: 'مفتوحة', active: true, validity: 'شهر واحد', colorIndex: 8, sort: 9 },
+  { id: 'باقة نصف الشهر', name: 'باقة نصف الشهر', price: 0, active: false, colorIndex: 0, sort: 99 },
+  { id: 'الباقة الشهرية', name: 'الباقة الشهرية', price: 0, active: false, colorIndex: 0, sort: 99 },
+  { id: 'باقة الألعاب', name: 'باقة الألعاب', price: 0, active: false, colorIndex: 0, sort: 99 },
+  { id: 'الباقة الأسبوعية', name: 'الباقة الأسبوعية', price: 300, active: false, colorIndex: 1, sort: 99 },
 ]
