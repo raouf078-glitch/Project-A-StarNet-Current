@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useState as useReactState } from 'react'
 import {
   ShieldCheck, Lock, Loader as Loader2, ShieldAlert, LogIn, Package, Boxes,
-  Wallet, Bell, Tags, DollarSign, UserPlus, LogOut,
+  Wallet, Bell, Tags, DollarSign, UserPlus, LogOut, KeyRound, Mail, Eye, EyeOff,
 } from 'lucide-react'
 import { auth } from '../lib/auth'
 import PageHeader from '../components/PageHeader'
@@ -13,6 +14,7 @@ import AdminDeposits from '../components/admin/AdminDeposits'
 import AdminNotifications from '../components/admin/AdminNotifications'
 import AdminWalletAdjust from '../components/admin/AdminWalletAdjust'
 import AdminRegistrations from '../components/admin/AdminRegistrations'
+import AdminPasswordReset from '../components/admin/AdminPasswordReset'
 
 const TABS = [
   { key: 'products', icon: Package, label: 'المنتجات' },
@@ -22,14 +24,77 @@ const TABS = [
   { key: 'wallet', icon: Wallet, label: 'المحافظ' },
   { key: 'notifications', icon: Bell, label: 'الإشعارات' },
   { key: 'registrations', icon: UserPlus, label: 'طلبات التسجيل' },
+  { key: 'passwords', icon: KeyRound, label: 'إعادة كلمات المرور' },
 ]
+
+function AdminLogin({ onSuccess }) {
+  const [email, setEmail] = useReactState('')
+  const [password, setPassword] = useReactState('')
+  const [showPwd, setShowPwd] = useReactState(false)
+  const [busy, setBusy] = useReactState(false)
+  const [error, setError] = useReactState('')
+
+  const login = async () => {
+    if (busy) return
+    setError('')
+    if (!email.trim() || !password) { setError('أدخل البريد وكلمة المرور'); return }
+    setBusy(true)
+    try {
+      await auth.signInWithAdmin(email.trim(), password)
+      onSuccess?.()
+    } catch (e) {
+      setError(e.message || 'تعذّر تسجيل الدخول')
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  return (
+    <div className="px-6 py-10 flex flex-col items-center">
+      <div className="w-full max-w-sm space-y-5">
+        <div className="flex flex-col items-center gap-3">
+          <div className="w-20 h-20 rounded-3xl bg-blue-50 flex items-center justify-center shadow-sm"><Lock size={38} className="text-blue-500" /></div>
+          <div className="text-center">
+            <h2 className="text-lg font-black text-gray-800">دخول الإدارة</h2>
+            <p className="text-sm text-gray-400 mt-1">سجّل الدخول بحساب المالك</p>
+          </div>
+        </div>
+
+        {error && (
+          <div className="bg-red-50 border border-red-200 rounded-xl px-4 py-2.5"><p className="text-xs text-red-600 text-center">{error}</p></div>
+        )}
+
+        <div className="space-y-4">
+          <div>
+            <label className="text-xs font-bold text-gray-600 mb-1 block">البريد الإلكتروني</label>
+            <div className="flex items-center gap-2 bg-white border border-gray-200 rounded-2xl px-4 py-3 focus-within:border-blue-400 transition-colors">
+              <Mail size={18} className="text-gray-400 shrink-0" />
+              <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="admin@example.com" dir="ltr" className="flex-1 text-sm text-gray-700 outline-none bg-transparent text-left" onKeyDown={e => e.key === 'Enter' && login()} />
+            </div>
+          </div>
+
+          <div>
+            <label className="text-xs font-bold text-gray-600 mb-1 block">كلمة المرور</label>
+            <div className="flex items-center gap-2 bg-white border border-gray-200 rounded-2xl px-4 py-3 focus-within:border-blue-400 transition-colors">
+              <Lock size={18} className="text-gray-400 shrink-0" />
+              <input type={showPwd ? 'text' : 'password'} value={password} onChange={e => setPassword(e.target.value)} placeholder="••••••" dir="ltr" className="flex-1 text-sm text-gray-700 outline-none bg-transparent text-left" onKeyDown={e => e.key === 'Enter' && login()} />
+              <button onClick={() => setShowPwd(!showPwd)} className="text-gray-400 shrink-0">{showPwd ? <EyeOff size={18} /> : <Eye size={18} />}</button>
+            </div>
+          </div>
+
+          <button onClick={login} disabled={busy} className="w-full bg-blue-600 text-white font-bold py-3.5 rounded-2xl flex items-center justify-center gap-2 active:scale-95 transition-transform disabled:opacity-50 shadow-lg shadow-blue-200">
+            {busy ? <><Loader2 size={18} className="animate-spin" /> جاري...</> : <><LogIn size={18} /> تسجيل الدخول</>}
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
 
 function AdminGate({ children }) {
   const navigate = useNavigate()
   const [, setSession] = useState(auth.getSession())
   const [checking, setChecking] = useState(true)
-  const [busy, setBusy] = useState(false)
-
   useEffect(() => {
     const unsub = auth.onAuthChange((sess) => {
       setSession(sess)
@@ -50,18 +115,7 @@ function AdminGate({ children }) {
     return (
       <div className="min-h-full bg-[rgb(var(--color-bg))]">
         <PageHeader icon={ShieldCheck} title="لوحة الإدارة" subtitle="منطقة خاصة بالإدارة" back onBack={() => navigate('/settings')} />
-        <div className="px-6 py-16 flex flex-col items-center text-center">
-          <div className="w-20 h-20 rounded-3xl bg-blue-50 flex items-center justify-center mb-5"><Lock size={38} className="text-blue-500" /></div>
-          <h2 className="text-lg font-black text-gray-800">يجب تسجيل الدخول</h2>
-          <p className="text-sm text-gray-400 mt-2 leading-relaxed max-w-xs">سجّل الدخول بحساب الإدارة للوصول إلى لوحة التحكم.</p>
-          <button
-            onClick={async () => { setBusy(true); try { await auth.signInWithGoogle() } catch { setBusy(false) } }}
-            disabled={busy}
-            className="mt-6 flex items-center justify-center gap-2 bg-blue-600 text-white font-bold px-6 py-3 rounded-2xl active:scale-95 transition-transform disabled:opacity-60 shadow-lg shadow-blue-200"
-          >
-            {busy ? <><Loader2 size={18} className="animate-spin" /> جاري...</> : <><LogIn size={18} /> تسجيل الدخول بـ Google</>}
-          </button>
-        </div>
+        <AdminLogin onSuccess={() => setSession(auth.getSession())} />
       </div>
     )
   }
@@ -124,6 +178,7 @@ export default function AdminPanel() {
           {tab === 'wallet' && <AdminWalletAdjust />}
           {tab === 'notifications' && <AdminNotifications />}
           {tab === 'registrations' && <AdminRegistrations />}
+          {tab === 'passwords' && <AdminPasswordReset />}
         </div>
       </div>
     </AdminGate>

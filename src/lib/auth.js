@@ -108,11 +108,22 @@ export const auth = {
     return data.user
   },
 
-  // Sign in with Google (for admin/owner)
-  async signInWithGoogle() {
-    const { data, error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: { redirectTo: window.location.origin + '/admin' },
+  // Sign in with email + password (for admin/owner)
+  async signInWithAdmin(email, password) {
+    if (email !== OWNER_EMAIL) throw new Error('هذا الحساب غير مصرّح كإدارة')
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password })
+    if (error) throw error
+    currentSession = data.session
+    if (data.session?.user?.id) await fetchProfile(data.session.user.id)
+    if (onAuthChangeCb) onAuthChangeCb(data.session)
+    return data.user
+  },
+
+  // Reset a customer's password (admin only)
+  async resetUserPassword(userEmail, newPassword) {
+    const { data, error } = await supabase.rpc('admin_reset_user_password', {
+      p_user_email: userEmail,
+      p_new_password: newPassword,
     })
     if (error) throw error
     return data

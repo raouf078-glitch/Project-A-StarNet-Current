@@ -1,5 +1,5 @@
 import { HashRouter, Routes, Route, Link, useLocation } from 'react-router-dom'
-import { Home, MapPin, Wrench, Store, Settings, Wallet } from 'lucide-react'
+import { Hop as Home, MapPin, Wrench, Store, Settings, Wallet } from 'lucide-react'
 import { useRef, useEffect, useState } from 'react'
 import HomePage from './pages/Home'
 import OffersPage from './pages/Offers'
@@ -64,8 +64,8 @@ function TabBar() {
     { path: '/coverage', icon: MapPin, label: 'أماكن التغطية' },
     { path: '/pos', icon: Store, label: 'نقاط البيع' },
     { path: '/tools', icon: Wrench, label: 'الأدوات' },
-    { path: '/settings', icon: Settings, label: 'الإعدادات' },
     { path: '/wallet', icon: Wallet, label: 'المحفظة' },
+    { path: '/settings', icon: Settings, label: 'الإعدادات' },
   ]
   return (
     <nav className="fixed bottom-0 left-0 right-0 sn-nav z-20 pb-[env(safe-area-inset-bottom,0px)]">

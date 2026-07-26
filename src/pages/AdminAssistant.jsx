@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { ShieldCheck, Lock, LogIn, BookOpen, FolderTree, Repeat, GitBranch, MousePointerClick, Image, ChartBar as BarChart3, Circle as HelpCircle, Wrench, Link2, MessageSquare, CircleCheck as CheckCircle2, ArrowUpRight, ThumbsUp, ThumbsDown, Trash2, Check, SquareCheck as CheckSquare, Square, Trash, Sparkles, ShieldAlert, Loader as Loader2 } from 'lucide-react'
+import { ShieldCheck, Lock, LogIn, Mail, Eye, EyeOff, BookOpen, FolderTree, Repeat, GitBranch, MousePointerClick, Image, ChartBar as BarChart3, Circle as HelpCircle, Wrench, Link2, MessageSquare, CircleCheck as CheckCircle2, ArrowUpRight, ThumbsUp, ThumbsDown, Trash2, Check, SquareCheck as CheckSquare, Square, Trash, Sparkles, ShieldAlert, Loader as Loader2 } from 'lucide-react'
 import { auth } from '../lib/auth'
+import { supabase } from '../lib/supabase'
 import { db } from '../lib/db'
 import { useLiveShared } from '../lib/useLive'
 import PageHeader from '../components/PageHeader'
@@ -28,6 +29,59 @@ const SECTIONS = [
 ]
 
 // ─── حارس الوصول: صاحب التطبيق فقط ───
+function OwnerLogin({ onLogin, busy }) {
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [showPwd, setShowPwd] = useState(false)
+  const [error, setError] = useState('')
+
+  const login = async () => {
+    if (busy) return
+    setError('')
+    if (!email.trim() || !password) { setError('أدخل البريد وكلمة المرور'); return }
+    try { await onLogin(email.trim(), password) } catch (e) { setError(e.message || 'تعذّر تسجيل الدخول') }
+  }
+
+  return (
+    <div className="w-full max-w-sm space-y-5">
+      <div className="flex flex-col items-center gap-3">
+        <div className="w-20 h-20 rounded-3xl bg-blue-50 flex items-center justify-center shadow-sm"><Lock size={38} className="text-blue-500" /></div>
+        <div className="text-center">
+          <h2 className="text-lg font-black text-gray-800">دخول المالك</h2>
+          <p className="text-sm text-gray-400 mt-1">سجّل الدخول بحساب المالك</p>
+        </div>
+      </div>
+
+      {error && (
+        <div className="bg-red-50 border border-red-200 rounded-xl px-4 py-2.5"><p className="text-xs text-red-600 text-center">{error}</p></div>
+      )}
+
+      <div className="space-y-4">
+        <div>
+          <label className="text-xs font-bold text-gray-600 mb-1 block">البريد الإلكتروني</label>
+          <div className="flex items-center gap-2 bg-white border border-gray-200 rounded-2xl px-4 py-3 focus-within:border-blue-400 transition-colors">
+            <Mail size={18} className="text-gray-400 shrink-0" />
+            <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="admin@example.com" dir="ltr" className="flex-1 text-sm text-gray-700 outline-none bg-transparent text-left" onKeyDown={e => e.key === 'Enter' && login()} />
+          </div>
+        </div>
+
+        <div>
+          <label className="text-xs font-bold text-gray-600 mb-1 block">كلمة المرور</label>
+          <div className="flex items-center gap-2 bg-white border border-gray-200 rounded-2xl px-4 py-3 focus-within:border-blue-400 transition-colors">
+            <Lock size={18} className="text-gray-400 shrink-0" />
+            <input type={showPwd ? 'text' : 'password'} value={password} onChange={e => setPassword(e.target.value)} placeholder="••••••" dir="ltr" className="flex-1 text-sm text-gray-700 outline-none bg-transparent text-left" onKeyDown={e => e.key === 'Enter' && login()} />
+            <button onClick={() => setShowPwd(!showPwd)} className="text-gray-400 shrink-0">{showPwd ? <EyeOff size={18} /> : <Eye size={18} />}</button>
+          </div>
+        </div>
+
+        <button onClick={login} disabled={busy} className="w-full bg-blue-600 text-white font-bold py-3.5 rounded-2xl flex items-center justify-center gap-2 active:scale-95 transition-transform disabled:opacity-50 shadow-lg shadow-blue-200">
+          {busy ? <><Loader2 size={18} className="animate-spin" /> جاري...</> : <><LogIn size={18} /> تسجيل الدخول</>}
+        </button>
+      </div>
+    </div>
+  )
+}
+
 function OwnerGate({ children }) {
   const navigate = useNavigate()
   const [, setSession] = useState(auth.getSession())
@@ -48,22 +102,17 @@ function OwnerGate({ children }) {
 
   if (auth.isOwner()) return children
 
-  const signIn = async () => {
+  const signIn = async (email, password) => {
     setBusy(true)
-    try { await auth.signInWithGoogle() } finally { setBusy(false) }
+    try { await auth.signInWithAdmin(email, password) } finally { setBusy(false) }
   }
 
   if (!auth.getSession()) {
     return (
       <div className="min-h-full bg-[rgb(var(--color-bg))]">
         <PageHeader icon={ShieldCheck} title="لوحة إدارة المساعد" subtitle="منطقة خاصة بصاحب التطبيق" back onBack={() => navigate('/settings')} />
-        <div className="px-6 py-16 flex flex-col items-center text-center">
-          <div className="w-20 h-20 rounded-3xl bg-blue-50 flex items-center justify-center mb-5"><Lock size={38} className="text-blue-500" /></div>
-          <h2 className="text-lg font-black text-gray-800">يجب تسجيل الدخول</h2>
-          <p className="text-sm text-gray-400 mt-2 leading-relaxed max-w-xs">سجّل الدخول بحساب المالك للوصول إلى إدارة مساعد ستار نت.</p>
-          <button onClick={signIn} disabled={busy} className="mt-6 flex items-center justify-center gap-2 bg-blue-600 text-white font-bold px-6 py-3 rounded-2xl active:scale-95 transition-transform disabled:opacity-60 shadow-lg shadow-blue-200">
-            {busy ? <><Loader2 size={18} className="animate-spin" /> جاري...</> : <><LogIn size={18} /> تسجيل الدخول بـ Google</>}
-          </button>
+        <div className="px-6 py-10 flex flex-col items-center">
+          <OwnerLogin onLogin={signIn} busy={busy} />
         </div>
       </div>
     )
