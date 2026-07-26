@@ -15,6 +15,7 @@ import FeedbackPage from './pages/Feedback'
 import GuidePage from './pages/Guide'
 import AssistantPage from './pages/Assistant'
 import AdminAssistantPage from './pages/AdminAssistant'
+import AdminPanelPage from './pages/AdminPanel'
 import Splash from './components/Splash'
 import AuthGate from './components/AuthGate'
 import WalletPage from './pages/Wallet'
@@ -117,8 +118,9 @@ export default function App() {
             <Route path="/feedback" element={<FeedbackPage />} />
             <Route path="/guide" element={<GuidePage />} />
             <Route path="/assistant" element={<AssistantPage />} />
-            <Route path="/admin" element={<AdminAssistantPage />} />
-            <Route path="/admin/:section" element={<AdminAssistantPage />} />
+            <Route path="/admin" element={<AdminPanelPage />} />
+            <Route path="/admin/assistant" element={<AdminAssistantPage />} />
+            <Route path="/admin/assistant/:section" element={<AdminAssistantPage />} />
             <Route path="/settings" element={<SettingsPage />} />
             <Route path="/wallet" element={<AuthGate><WalletPage /></AuthGate>} />
             <Route path="/wallet/history" element={<AuthGate><WalletHistoryPage /></AuthGate>} />

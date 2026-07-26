@@ -1,9 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import {
-  Phone, MessageCircle, Wifi, Save, CheckCircle2, Info, Radar,
-  Send, Facebook, Globe, ExternalLink, Sun, Moon, Users, Cog, Bot, ChevronLeft,
-} from 'lucide-react'
+import { Phone, MessageCircle, Wifi, Save, CircleCheck as CheckCircle2, Info, Radar, Send, Facebook, Globe, ExternalLink, Sun, Moon, Users, Cog, Bot, ChevronLeft, ShieldCheck, Package } from 'lucide-react'
 import PageHeader from '../components/PageHeader'
 import { getTheme, setTheme } from '../theme'
 import {
@@ -173,9 +170,24 @@ export default function SettingsPage() {
           </div>
         </div>
 
-        {/* مدخل لوحة إدارة المساعد — الوصول محمي لصاحب التطبيق فقط */}
+        {/* مدخل لوحة الإدارة المالية — الوصول محمي للأدمن فقط */}
         <button
           onClick={() => navigate('/admin')}
+          className="w-full bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex items-center gap-3 active:scale-[0.98] transition-transform text-right"
+        >
+          <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center shrink-0">
+            <ShieldCheck size={19} className="text-emerald-600" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="font-bold text-gray-700 text-sm">لوحة الإدارة</p>
+            <p className="text-[11px] text-gray-400">المنتجات، المخزون، الإيداعات، الأرصدة، الإشعارات</p>
+          </div>
+          <ChevronLeft size={18} className="text-gray-300 shrink-0" />
+        </button>
+
+        {/* مدخل لوحة إدارة المساعد — الوصول محمي لصاحب التطبيق فقط */}
+        <button
+          onClick={() => navigate('/admin/assistant')}
           className="w-full bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex items-center gap-3 active:scale-[0.98] transition-transform text-right"
         >
           <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center shrink-0">
