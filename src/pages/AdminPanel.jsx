@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { ShieldCheck, Lock, LogIn, Package, Boxes, Wallet, Bell, Tags, DollarSign, Users, Loader as Loader2, ShieldAlert } from 'lucide-react'
+import {
+  ShieldCheck, Lock, Loader as Loader2, ShieldAlert, LogIn, Package, Boxes,
+  Wallet, Bell, Tags, DollarSign, UserPlus, LogOut,
+} from 'lucide-react'
 import { auth } from '../lib/auth'
 import PageHeader from '../components/PageHeader'
 import AdminProducts from '../components/admin/AdminProducts'
@@ -9,20 +12,23 @@ import AdminInventory from '../components/admin/AdminInventory'
 import AdminDeposits from '../components/admin/AdminDeposits'
 import AdminNotifications from '../components/admin/AdminNotifications'
 import AdminWalletAdjust from '../components/admin/AdminWalletAdjust'
+import AdminRegistrations from '../components/admin/AdminRegistrations'
 
 const TABS = [
-  { key: 'products', icon: Package, label: 'المنتجات', color: 'bg-blue-50 text-blue-600' },
-  { key: 'categories', icon: Tags, label: 'الأقسام', color: 'bg-indigo-50 text-indigo-600' },
-  { key: 'inventory', icon: Boxes, label: 'مخزون البطاقات', color: 'bg-teal-50 text-teal-600' },
-  { key: 'deposits', icon: DollarSign, label: 'طلبات الإيداع', color: 'bg-amber-50 text-amber-600' },
-  { key: 'wallet', icon: Wallet, label: 'تعديل الأرصدة', color: 'bg-emerald-50 text-emerald-600' },
-  { key: 'notifications', icon: Bell, label: 'الإشعارات', color: 'bg-rose-50 text-rose-600' },
+  { key: 'products', icon: Package, label: 'المنتجات' },
+  { key: 'categories', icon: Tags, label: 'الأقسام' },
+  { key: 'inventory', icon: Boxes, label: 'مخزون البطاقات' },
+  { key: 'deposits', icon: DollarSign, label: 'الإيداعات' },
+  { key: 'wallet', icon: Wallet, label: 'المحافظ' },
+  { key: 'notifications', icon: Bell, label: 'الإشعارات' },
+  { key: 'registrations', icon: UserPlus, label: 'طلبات التسجيل' },
 ]
 
 function AdminGate({ children }) {
   const navigate = useNavigate()
   const [, setSession] = useState(auth.getSession())
   const [checking, setChecking] = useState(true)
+  const [busy, setBusy] = useState(false)
 
   useEffect(() => {
     const unsub = auth.onAuthChange((sess) => {
@@ -47,9 +53,13 @@ function AdminGate({ children }) {
         <div className="px-6 py-16 flex flex-col items-center text-center">
           <div className="w-20 h-20 rounded-3xl bg-blue-50 flex items-center justify-center mb-5"><Lock size={38} className="text-blue-500" /></div>
           <h2 className="text-lg font-black text-gray-800">يجب تسجيل الدخول</h2>
-          <p className="text-sm text-gray-400 mt-2 leading-relaxed max-w-xs">سجّل الدخول بحساب إداري للوصول إلى لوحة الإدارة.</p>
-          <button onClick={() => navigate('/wallet')} className="mt-6 flex items-center justify-center gap-2 bg-blue-600 text-white font-bold px-6 py-3 rounded-2xl active:scale-95 transition-transform shadow-lg shadow-blue-200">
-            <LogIn size={18} /> تسجيل الدخول
+          <p className="text-sm text-gray-400 mt-2 leading-relaxed max-w-xs">سجّل الدخول بحساب الإدارة للوصول إلى لوحة التحكم.</p>
+          <button
+            onClick={async () => { setBusy(true); try { await auth.signInWithGoogle() } catch { setBusy(false) } }}
+            disabled={busy}
+            className="mt-6 flex items-center justify-center gap-2 bg-blue-600 text-white font-bold px-6 py-3 rounded-2xl active:scale-95 transition-transform disabled:opacity-60 shadow-lg shadow-blue-200"
+          >
+            {busy ? <><Loader2 size={18} className="animate-spin" /> جاري...</> : <><LogIn size={18} /> تسجيل الدخول بـ Google</>}
           </button>
         </div>
       </div>
@@ -62,8 +72,14 @@ function AdminGate({ children }) {
         <PageHeader icon={ShieldCheck} title="لوحة الإدارة" subtitle="منطقة خاصة بالإدارة" back onBack={() => navigate('/settings')} />
         <div className="px-6 py-16 flex flex-col items-center text-center">
           <div className="w-20 h-20 rounded-3xl bg-rose-50 flex items-center justify-center mb-5"><ShieldAlert size={38} className="text-rose-500" /></div>
-          <h2 className="text-lg font-black text-gray-800">لا تملك صلاحية الإدارة</h2>
-          <p className="text-sm text-gray-400 mt-2 leading-relaxed max-w-xs">هذا الحساب ليس له دور إداري. تواصل مع المسؤول لمنحك صلاحية admin أو manager.</p>
+          <h2 className="text-lg font-black text-gray-800">غير مصرّح لك بالدخول</h2>
+          <p className="text-sm text-gray-400 mt-2 leading-relaxed max-w-xs">هذه اللوحة خاصة بالمالك فقط. البريد المسموح: raouf078@gmail.com</p>
+          <button
+            onClick={async () => { await auth.signOut(); navigate('/settings') }}
+            className="mt-6 flex items-center justify-center gap-2 bg-gray-100 text-gray-600 font-bold px-6 py-3 rounded-2xl active:scale-95 transition-transform"
+          >
+            <LogOut size={18} /> تسجيل الخروج
+          </button>
         </div>
       </div>
     )
@@ -107,6 +123,7 @@ export default function AdminPanel() {
           {tab === 'deposits' && <AdminDeposits />}
           {tab === 'wallet' && <AdminWalletAdjust />}
           {tab === 'notifications' && <AdminNotifications />}
+          {tab === 'registrations' && <AdminRegistrations />}
         </div>
       </div>
     </AdminGate>

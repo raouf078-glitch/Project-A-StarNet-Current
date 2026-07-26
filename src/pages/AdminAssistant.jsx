@@ -1,11 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import {
-  ShieldCheck, Lock, LogIn, BookOpen, FolderTree, Repeat, GitBranch,
-  MousePointerClick, Image, BarChart3, HelpCircle, Wrench, Link2,
-  MessageSquare, CheckCircle2, ArrowUpRight, ThumbsUp, ThumbsDown, Trash2, Check,
-  CheckSquare, Square, Trash, Sparkles,
-} from 'lucide-react'
+import { ShieldCheck, Lock, LogIn, BookOpen, FolderTree, Repeat, GitBranch, MousePointerClick, Image, ChartBar as BarChart3, Circle as HelpCircle, Wrench, Link2, MessageSquare, CircleCheck as CheckCircle2, ArrowUpRight, ThumbsUp, ThumbsDown, Trash2, Check, SquareCheck as CheckSquare, Square, Trash, Sparkles, ShieldAlert, Loader as Loader2 } from 'lucide-react'
 import { auth } from '../lib/auth'
 import { db } from '../lib/db'
 import { useLiveShared } from '../lib/useLive'
@@ -35,26 +30,52 @@ const SECTIONS = [
 // ─── حارس الوصول: صاحب التطبيق فقط ───
 function OwnerGate({ children }) {
   const navigate = useNavigate()
-  const [, setUser] = useState(auth.getCurrentUser())
+  const [, setSession] = useState(auth.getSession())
+  const [checking, setChecking] = useState(true)
   const [busy, setBusy] = useState(false)
-  useEffect(() => auth.onAuthChange(setUser), [])
+  useEffect(() => {
+    const unsub = auth.onAuthChange((s) => { setSession(s); setChecking(false) })
+    return unsub
+  }, [])
 
-  if (auth.isAppOwner()) return children
+  if (checking) {
+    return (
+      <div className="min-h-full flex items-center justify-center bg-[rgb(var(--color-bg))]">
+        <Loader2 size={28} className="animate-spin text-blue-500" />
+      </div>
+    )
+  }
+
+  if (auth.isOwner()) return children
 
   const signIn = async () => {
     setBusy(true)
-    try { await auth.signIn() } finally { setBusy(false) }
+    try { await auth.signInWithGoogle() } finally { setBusy(false) }
   }
+
+  if (!auth.getSession()) {
+    return (
+      <div className="min-h-full bg-[rgb(var(--color-bg))]">
+        <PageHeader icon={ShieldCheck} title="لوحة إدارة المساعد" subtitle="منطقة خاصة بصاحب التطبيق" back onBack={() => navigate('/settings')} />
+        <div className="px-6 py-16 flex flex-col items-center text-center">
+          <div className="w-20 h-20 rounded-3xl bg-blue-50 flex items-center justify-center mb-5"><Lock size={38} className="text-blue-500" /></div>
+          <h2 className="text-lg font-black text-gray-800">يجب تسجيل الدخول</h2>
+          <p className="text-sm text-gray-400 mt-2 leading-relaxed max-w-xs">سجّل الدخول بحساب المالك للوصول إلى إدارة مساعد ستار نت.</p>
+          <button onClick={signIn} disabled={busy} className="mt-6 flex items-center justify-center gap-2 bg-blue-600 text-white font-bold px-6 py-3 rounded-2xl active:scale-95 transition-transform disabled:opacity-60 shadow-lg shadow-blue-200">
+            {busy ? <><Loader2 size={18} className="animate-spin" /> جاري...</> : <><LogIn size={18} /> تسجيل الدخول بـ Google</>}
+          </button>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="min-h-full bg-[rgb(var(--color-bg))]">
       <PageHeader icon={ShieldCheck} title="لوحة إدارة المساعد" subtitle="منطقة خاصة بصاحب التطبيق" back onBack={() => navigate('/settings')} />
       <div className="px-6 py-16 flex flex-col items-center text-center">
-        <div className="w-20 h-20 rounded-3xl bg-blue-50 flex items-center justify-center mb-5"><Lock size={38} className="text-blue-500" /></div>
-        <h2 className="text-lg font-black text-gray-800">هذه اللوحة مخصّصة لصاحب التطبيق</h2>
-        <p className="text-sm text-gray-400 mt-2 leading-relaxed max-w-xs">سجّل الدخول بحساب صاحب التطبيق للوصول إلى إدارة مساعد ستار نت. غير مصرّح لغير المالك.</p>
-        <button onClick={signIn} disabled={busy} className="mt-6 flex items-center justify-center gap-2 bg-blue-600 text-white font-bold px-6 py-3 rounded-2xl active:scale-95 transition-transform disabled:opacity-60 shadow-lg shadow-blue-200">
-          <LogIn size={18} /> {busy ? 'جاري الدخول...' : 'تسجيل الدخول'}
-        </button>
+        <div className="w-20 h-20 rounded-3xl bg-rose-50 flex items-center justify-center mb-5"><ShieldAlert size={38} className="text-rose-500" /></div>
+        <h2 className="text-lg font-black text-gray-800">غير مصرّح لك بالدخول</h2>
+        <p className="text-sm text-gray-400 mt-2 leading-relaxed max-w-xs">هذه اللوحة خاصة بالمالك فقط. البريد المسموح: raouf078@gmail.com</p>
       </div>
     </div>
   )

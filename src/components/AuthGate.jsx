@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react'
 import { auth } from '../lib/auth'
-import PhoneLogin from './PhoneLogin'
+import NewLoginScreen from './NewLoginScreen'
+import RegistrationScreen from './RegistrationScreen'
 
-// Wraps financial pages — shows phone login if not authenticated
+// Wraps financial pages — shows login if not authenticated
 export default function AuthGate({ children }) {
   const [session, setSession] = useState(auth.getSession())
   const [checking, setChecking] = useState(true)
+  const [view, setView] = useState('login') // login | register
 
   useEffect(() => {
     const unsub = auth.onAuthChange((sess) => {
@@ -24,7 +26,20 @@ export default function AuthGate({ children }) {
   }
 
   if (!session) {
-    return <PhoneLogin onSuccess={() => setSession(auth.getSession())} />
+    if (view === 'register') {
+      return (
+        <RegistrationScreen
+          onBack={() => setView('login')}
+          onGoLogin={() => setView('login')}
+        />
+      )
+    }
+    return (
+      <NewLoginScreen
+        onSuccess={() => setSession(auth.getSession())}
+        onGoRegister={() => setView('register')}
+      />
+    )
   }
 
   return children
