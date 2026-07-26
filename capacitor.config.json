@@ -1,0 +1,35 @@
+{
+  "appId": "com.starnet.app",
+  "appName": "StarNET",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "https",
+    "cleartext": true
+  },
+  "android": {
+    "allowMixedContent": true,
+    "captureInput": true,
+    "webContentsDebuggingEnabled": false
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 2000,
+      "launchAutoHide": true,
+      "backgroundColor": "#FFFFFF",
+      "androidScaleType": "CENTER_CROP",
+      "showSpinner": false,
+      "android": {
+        "hdpi": "resources/splash drawable-hdpi/splash.png",
+        "ldpi": "resources/splash drawable-ldpi/splash.png",
+        "mdpi": "resources/splash drawable-mdpi/splash.png",
+        "xhdpi": "resources/splash drawable-xhdpi/splash.png",
+        "xxhdpi": "resources/splash drawable-xxhdpi/splash.png",
+        "xxxhdpi": "resources/splash drawable-xxxhdpi/splash.png"
+      }
+    },
+    "StatusBar": {
+      "style": "DARK",
+      "backgroundColor": "#3B82F6"
+    }
+  }
+}

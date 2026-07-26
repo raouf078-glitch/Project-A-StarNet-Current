@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">StarNET</string>
+    <string name="title_activity_main">StarNET</string>
+    <string name="package_name">com.starnet.app</string>
+    <string name="custom_url_scheme">com.starnet.app</string>
+</resources>
