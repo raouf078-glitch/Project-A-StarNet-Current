@@ -1,5 +1,5 @@
 import { HashRouter, Routes, Route, Link, useLocation } from 'react-router-dom'
-import { Hop as Home, MapPin, Wrench, Store, Settings, Wallet } from 'lucide-react'
+import { Home as HomeIcon, MapPin, Wrench, Store, Settings, Wallet } from 'lucide-react'
 import { useRef, useEffect, useState } from 'react'
 import HomePage from './pages/Home'
 import OffersPage from './pages/Offers'
@@ -60,7 +60,7 @@ function TabBar() {
   // شاشة المساعد تعمل بملء الشاشة (تغطّي الشريط) — نخفيه لتفادي ظهوره خلفها
   if (pathname === '/assistant') return null
   const tabs = [
-    { path: '/', icon: Home, label: 'الرئيسية' },
+    { path: '/', icon: HomeIcon, label: 'الرئيسية' },
     { path: '/coverage', icon: MapPin, label: 'أماكن التغطية' },
     { path: '/pos', icon: Store, label: 'نقاط البيع' },
     { path: '/tools', icon: Wrench, label: 'الأدوات' },
