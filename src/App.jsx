@@ -1,5 +1,5 @@
 import { HashRouter, Routes, Route, Link, useLocation } from 'react-router-dom'
-import { Hop as Home, MapPin, Wrench, Store, Settings, Wallet } from 'lucide-react'
+import { Home, MapPin, Wrench, Store, Settings, Wallet } from 'lucide-react'
 import { useRef, useEffect, useState } from 'react'
 import HomePage from './pages/Home'
 import OffersPage from './pages/Offers'
