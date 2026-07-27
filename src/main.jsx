@@ -1,12 +1,9 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App'
-import { seedPackagesOnce } from './lib/useLive'
 import './index.css'
 import './styles/starnet-tokens.css'
 import './styles/starnet-hero.css'
-
-seedPackagesOnce()
 
 /*
  * Whacka platform bootstrap (stub).

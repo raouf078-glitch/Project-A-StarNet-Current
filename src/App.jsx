@@ -1,5 +1,5 @@
 import { HashRouter, Routes, Route, Link, useLocation } from 'react-router-dom'
-import { Hop as HomeIcon, MapPin, Wrench, Store, Settings, Wallet } from 'lucide-react'
+import { Hop as Home, MapPin, Wrench, Store, Settings, Wallet } from 'lucide-react'
 import { useRef, useEffect, useState } from 'react'
 import HomePage from './pages/Home'
 import OffersPage from './pages/Offers'
@@ -60,7 +60,7 @@ function TabBar() {
   // شاشة المساعد تعمل بملء الشاشة (تغطّي الشريط) — نخفيه لتفادي ظهوره خلفها
   if (pathname === '/assistant') return null
   const tabs = [
-    { path: '/', icon: HomeIcon, label: 'الرئيسية' },
+    { path: '/', icon: Home, label: 'الرئيسية' },
     { path: '/coverage', icon: MapPin, label: 'أماكن التغطية' },
     { path: '/pos', icon: Store, label: 'نقاط البيع' },
     { path: '/tools', icon: Wrench, label: 'الأدوات' },
@@ -110,10 +110,10 @@ export default function App() {
             <Route path="/offers" element={<OffersPage />} />
             <Route path="/tools" element={<ToolsPage />} />
             <Route path="/activate" element={<ActivatePage />} />
-            <Route path="/deposit" element={<DepositPage />} />
+            <Route path="/deposit" element={<AuthGate><DepositPage /></AuthGate>} />
             <Route path="/coverage" element={<CoveragePage />} />
             <Route path="/pos" element={<PointsOfSalePage />} />
-            <Route path="/my-cards" element={<MyCardsPage />} />
+            <Route path="/my-cards" element={<AuthGate><MyCardsPage /></AuthGate>} />
             <Route path="/calculator" element={<CalculatorPage />} />
             <Route path="/feedback" element={<FeedbackPage />} />
             <Route path="/guide" element={<GuidePage />} />
